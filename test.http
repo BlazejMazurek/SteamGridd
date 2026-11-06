@@ -1,0 +1,61 @@
+GET http://localhost:5000/api/games
+
+### 
+POST http://localhost:5000/api/games
+Content-Type: application/json
+
+{
+  "appId": 730,
+  "title": "Counter-Strike 2",
+  "releaseDate": "2023-09-27",
+  "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/730/library_600x900.jpg",
+  "genre": "Action, Free to play",
+  "publisher": "Valve"
+}
+
+###
+POST http://localhost:5000/api/games
+Content-Type: application/json
+
+{
+  "appId": 250900,
+  "title": "The Binding of Isaac: Rebirth",
+  "releaseDate": "2014-11-04",
+  "coverImage": "https://shared.akamai.steamstatic.com/store_item_assets/steam/apps/250900/library_600x900.jpg",
+  "genre": "Action, Rougelike, Indie",
+  "publisher": "Nicalis, Inc."
+}
+
+### Rejestracja
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "RadosnaJagoda68",
+  "email": "Radosna_Jagoda68@gmail.com",
+  "password": "haslo123"
+}
+
+### Logowanie
+POST http://localhost:5000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "Radosna_Jagoda68@gmail.com",
+  "password": "haslo123"
+}
+
+###
+POST http://localhost:5000/api/reviews
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiUmFkb3NuYV9KYWdvZGE2OEBnbWFpbC5jb20iLCJpYXQiOjE3OTM5NTg3ODQsImV4cCI6MTc5NDA0NTE4NH0.fxPNxEsW390Cm95_7hFweZ_1gnIhvHxZn8UXYWxqsVo
+
+{
+  "rating": 3.5,
+  "comment": "Pszto ty bys zdzielał",
+  "imageUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmammonopedia.pl%2Fimages%2Fthumb%2F3%2F33%2FCo_by%25C5%259B_zrobi%25C5%2582_fejs.png%2F450px-Co_by%25C5%259B_zrobi%25C5%2582_fejs.png&f=1&nofb=1&ipt=b6a4f3a1e54844bc0ef77dd9b0c187270dd94c5f8c63e13cf76b053ccc53baa1&ipo=images",
+  "gameId": 279
+}
+
+### Pobranie wszystkich recenzji dla konkretnej gry (zastąp 1 odpowiednim ID gry)
+GET http://localhost:5000/api/games/279/reviews
