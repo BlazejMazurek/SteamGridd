@@ -1,39 +1,46 @@
 import prisma from '../config/db.js';
 
-export const getGames = async(req, res) => {
+export const getGames = async (req, res) => {
     try {
-        const { title } = req.query;
-        let games;
-        
-        const queryOptions = {
-            include: {
-                developer: true,
-                publisher: true,
-                genres: true,
-                reviews: {
-                    include: {
-                        user: {
-                            select: { username: true }
-                        }
+        const { genres, publisherId, developerId, search } = req.query;
+        let whereCondition = {};
+
+        if (genres) {
+            const genreIds = genres.split(',').map(id => Number(id.trim()));
+            
+            whereCondition.AND = genreIds.map(genreIds => ({
+                genres: {
+                    some: {
+                        id: genreIds
                     }
                 }
-            }
-        };
+            }));
+        }
 
-        if (title) {
-            queryOptions.where = {
-                title: {
-                    contains: title,
-                    mode: 'insensitive',
-                },
+        if (publisherId) {
+            whereCondition.publisherId = Number(publisherId);
+        }
+
+        if (search) {
+            whereCondition.title = {
+                contains: search,
+                mode: 'insensitive',
             };
         }
 
-        games = await prisma.game.findMany(queryOptions);
-        res.json(games);
+        const games = await prisma.game.findMany({
+            where: whereCondition,
+            include: {
+                genres: true,
+                publisher: true,
+                developer: true
+            }
+        });
+
+        res.status(200).json(games);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Nie udało się pobrać gier z bazy :(' });
+        console.error("Błąd podczas pobierania gier:", error);
+        res.status(500).json({ error: "Błąd serwera podczas filtrowania gier." });
     }
 };
 

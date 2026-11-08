@@ -1,8 +1,11 @@
 import prisma from '../config/db.js';
+import sharp from 'sharp';
+import path from 'path';
+import fs from 'fs';
 
 export const createReview = async (req, res) => {
     try {
-        const { rating, comment,imageUrl, gameId } = req.body;
+        const { rating, comment, gameId } = req.body;
         const userId = req.user.userId;
         const numRating = Number(rating);
 
@@ -15,7 +18,7 @@ export const createReview = async (req, res) => {
         }
 
         const gameExists = await prisma.game.findUnique({
-            where: { id: Number(gameId) }
+            where: { appId: Number(gameId) }
         });
 
         if (!gameExists) {
@@ -33,18 +36,43 @@ export const createReview = async (req, res) => {
             return res.status(400).json({ error: 'Już dodałeś recenzję dla tej gry.' });
         }
 
+        let imageUrl = null;
+
+        if (req.file) {
+            const uploadDir = path.resolve('uploads');
+            if (!fs.existsSync(uploadDir)) {
+                fs.existsSync(uploadDir) || fs.mkdirSync(uploadDir, { recursive: true });
+            }
+
+            const filename = `review-${userId}-${Date.now()}.webp`;
+            const outputPath = path.join(uploadDir, filename);
+
+            await sharp(req.file.buffer)
+                .resize({ width: 800, withoutEnlargement: true })
+                .webp({ quality: 80 })
+                .toFile(outputPath);
+
+            const baseUrl = `${req.protocol}://${req.get('host')}`;
+            imageUrl = `${baseUrl}/uploads/${filename}`;
+        }
+
         const newReview = await prisma.review.create({
             data: {
                 rating: Number(rating),
                 comment,
                 imageUrl,
-                userId: Number(userId),
-                gameId: Number(gameId)
+                user: {
+                    connect: {id: Number(userId)}
+                },
+                game: {
+                    connect: {appId: Number(gameId)} 
+                }
             },
             include: {
                 user: {
                     select: { username: true } 
-                }
+                },
+                game: true
             }
         });
 
@@ -61,17 +89,14 @@ export const createReview = async (req, res) => {
 export const getGameReviews = async (req, res) => {
     try {
         const { gameId } = req.params;
-
         const reviews = await prisma.review.findMany({
             where: { gameId: Number(gameId) },
             include: {
                 user: {
                     select: { username: true }
                 }
-            },
-            orderBy: { createdAt: 'desc' }
+            }
         });
-
         res.json(reviews);
     } catch (error) {
         console.error(error);

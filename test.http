@@ -45,17 +45,35 @@ Content-Type: application/json
   "password": "haslo123"
 }
 
-###
+### Dodanie recenzji ze zdjęciem z komputera
 POST http://localhost:5000/api/reviews
-Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiUmFkb3NuYV9KYWdvZGE2OEBnbWFpbC5jb20iLCJpYXQiOjE3OTM5NTg3ODQsImV4cCI6MTc5NDA0NTE4NH0.fxPNxEsW390Cm95_7hFweZ_1gnIhvHxZn8UXYWxqsVo
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiUmFkb3NuYV9KYWdvZGE2OEBnbWFpbC5jb20iLCJpYXQiOjE3OTQxNzExNzAsImV4cCI6MTc5NDI1NzU3MH0.vWgGD16KVTqzjRqEI2FlvxoDCB2vmsZHB9CgqEyfx5s
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
 
-{
-  "rating": 3.5,
-  "comment": "Pszto ty bys zdzielał",
-  "imageUrl": "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fmammonopedia.pl%2Fimages%2Fthumb%2F3%2F33%2FCo_by%25C5%259B_zrobi%25C5%2582_fejs.png%2F450px-Co_by%25C5%259B_zrobi%25C5%2582_fejs.png&f=1&nofb=1&ipt=b6a4f3a1e54844bc0ef77dd9b0c187270dd94c5f8c63e13cf76b053ccc53baa1&ipo=images",
-  "gameId": 279
-}
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="rating"
+
+3.5
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="comment"
+
+Pszto ty bys zdzielał
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="gameId"
+
+461040
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="image"; filename="test-image.jpg"
+Content-Type: image/jpeg
+
+< ./test-image.jpg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
 
 ### Pobranie wszystkich recenzji dla konkretnej gry (zastąp 1 odpowiednim ID gry)
 GET http://localhost:5000/api/games/279/reviews
+
+
+###
+GET http://localhost:5000/api/user/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiUmFkb3NuYV9KYWdvZGE2OEBnbWFpbC5jb20iLCJpYXQiOjE3OTQxNjczNTEsImV4cCI6MTc5NDI1Mzc1MX0.q0C63wwUJ83DdJzr9vxYlFO6b8Kr6Gh5T7S8k2-tM9c
