@@ -32,5 +32,5 @@ app.use('/api', reviewRoutes);
 app.use('/api', genreRoutes);
 
 app.listen(PORT, () => {
-    console.log("Serwer działa na porcie ${PORT}");
+    console.log(`Serwer działa na porcie ${PORT}`);
 });
