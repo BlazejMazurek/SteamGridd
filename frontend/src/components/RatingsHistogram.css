@@ -1,0 +1,34 @@
+.histogram h2 {
+  font-size: 20px;
+  font-weight: normal;
+  margin: 0 0 15px;
+}
+
+.histogram-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  border-bottom: 1px solid white;
+}
+
+.histogram-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.histogram-bar {
+  width: 100%;
+  background: #4a5ea8;
+}
+
+.histogram-value,
+.histogram-count {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.histogram-count {
+  color: #9aa3d0;
+}

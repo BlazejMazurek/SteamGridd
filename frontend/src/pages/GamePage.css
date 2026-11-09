@@ -1,0 +1,45 @@
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 30px;
+}
+
+.comment-form textarea {
+  padding: 10px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.comment-form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-form select {
+  margin-left: 8px;
+  padding: 6px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+}
+
+.comment-form button {
+  padding: 8px 24px;
+  background: #4a5ea8;
+  border: none;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background: #5b70c2;
+}

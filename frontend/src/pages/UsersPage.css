@@ -1,0 +1,67 @@
+.users-page {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.users-page h1 {
+  font-size: 30px;
+  font-weight: normal;
+  border-bottom: 1px solid white;
+  padding-bottom: 10px;
+  margin: 0 0 25px;
+}
+
+.users-search {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 30px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.users-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 16px;
+  background: #1b2a5e;
+  color: white;
+  text-decoration: none;
+}
+
+.user-row:hover {
+  background: #26397a;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  flex-shrink: 0;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.user-name {
+  font-size: 18px;
+}
+
+.user-meta {
+  font-size: 13px;
+  color: #9aa3d0;
+}

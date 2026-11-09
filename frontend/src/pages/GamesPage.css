@@ -1,0 +1,30 @@
+.games-page {
+  max-width: 1000px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.games-page h1 {
+  font-size: 30px;
+  font-weight: normal;
+  border-bottom: 1px solid white;
+  padding-bottom: 10px;
+  margin: 0 0 25px;
+}
+
+.games-search {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 30px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 16px;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+}

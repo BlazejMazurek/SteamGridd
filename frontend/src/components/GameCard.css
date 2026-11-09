@@ -1,0 +1,15 @@
+.game-card {
+  background: #d9d9d9;
+  color: #111936;
+  aspect-ratio: 3 / 4;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  text-decoration: none;
+}
+
+.game-card-rating {
+  margin-top: 6px;
+}

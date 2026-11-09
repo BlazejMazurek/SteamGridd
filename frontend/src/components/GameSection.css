@@ -1,0 +1,29 @@
+.game-section {
+  margin-bottom: 60px;
+}
+
+.game-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  border-bottom: 1px solid white;
+  margin-bottom: 25px;
+}
+
+.game-section-header h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: normal;
+}
+
+.game-section-header a {
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.game-section-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30px;
+}
