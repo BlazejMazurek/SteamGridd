@@ -20,17 +20,16 @@ async function fetchWithRetry(url, retries = 5, delay = 3000) {
 }
 
 async function main() {
-    console.log('Pobieram listę wszystkich gier z bazy do aktualizacji relacji...');
-    const existingGames = await prisma.game.findMany({
-        select: { appId: true }
-    });
+    const appIdsToFetch = [
+        461040, // np. Pico Park
+    ];
 
-    console.log(`Znaleziono ${existingGames.length} gier w bazie. Rozpoczynam aktualizację relacji...`);
+    console.log(`Rozpoczynam pobieranie i instalowanie ${appIdsToFetch.length} gier do bazy...`);
 
     let successCount = 0;
 
-    for (let i = 0; i < existingGames.length; i++) {
-        const { appId } = existingGames[i];
+    for (let i = 0; i < appIdsToFetch.length; i++) {
+        const appId = appIdsToFetch[i];
 
         try {
             const detailsRes = await fetchWithRetry(`https://store.steampowered.com/api/appdetails?appids=${appId}`);
@@ -57,6 +56,7 @@ async function main() {
                 const genresList = data.genres || [];
 
                 const gameData = {
+                    appId, // <-- appId jest teraz wewnątrz obiektu
                     title,
                     description,
                     releaseDate,
@@ -69,9 +69,9 @@ async function main() {
                     } : undefined,
                     publisher: publisherName ? {
                         connectOrCreate: {
-                            where: { name: publisherName },
-                            create: { name: publisherName }
-                        }
+                        where: { name: publisherName },
+                        create: { name: publisherName }
+                    }
                     } : undefined,
                     genres: {
                         connectOrCreate: genresList.map(g => ({
@@ -81,12 +81,13 @@ async function main() {
                     }
                 };
 
-                await prisma.game.update({
-                    where: { appId },
-                    data: gameData,
-                });
+            await prisma.game.upsert({
+                where: { appId },
+                update: gameData,
+                create: gameData
+            });
 
-                console.log(`[${i + 1}/${existingGames.length}] Zaktualizowano relacje dla: ${title}`);
+                console.log(`[${i + 1}/${appIdsToFetch.length}] Zainstalowano / dodano grę: ${title} (AppID: ${appId})`);
                 successCount++;
             }
 
@@ -96,7 +97,7 @@ async function main() {
         }
     }
 
-    console.log(`Zakończono! Zaktualizowano pomyślnie ${successCount} gier.`);
+    console.log(`Zakończono! Pomyślnie przetworzono i zainstalowano ${successCount} gier.`);
 }
 
 main()

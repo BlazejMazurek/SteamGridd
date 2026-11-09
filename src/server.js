@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import gameRoutes from './routes/gameRoutes.js';
-import authRoutes from './routes/authRoutes.js'
+import authRoutes from './routes/authRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import genreRoutes from './routes/genreRoutes.js';
 import publisherRoutes from './routes/publisherRoutes.js';
@@ -25,12 +25,12 @@ app.get('/', (req, res) => {
 
 app.use('/api/games', gameRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api', reviewRoutes);
-app.use('/api', genreRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/publishers', publisherRoutes);
 app.use('/api/developers', developerRoutes);
-app.use('/api/user', userRoutes);
+app.use('/api', reviewRoutes);
+app.use('/api', genreRoutes);
 
 app.listen(PORT, () => {
-    console.log(`Serwer działa na porcie ${PORT}`);
+    console.log("Serwer działa na porcie ${PORT}");
 });

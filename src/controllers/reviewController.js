@@ -13,7 +13,7 @@ export const createReview = async (req, res) => {
             return res.status(400).json({ error: 'Ocena musi być w przedziale od 0.5 do 5.0'});
         }
 
-        if (!gameId) {
+        if (!appIdId) {
             return res.status(400).json({ error: 'ID gry jest wymagane.' });
         }
 
@@ -28,7 +28,7 @@ export const createReview = async (req, res) => {
         const existingReview = await prisma.review.findFirst({
             where: {
                 userId: Number(userId),
-                appId: Number(appId)
+                game: { appId: Number(appId) }
             }
         });
 
