@@ -8,6 +8,14 @@
   justify-content: center;
   text-align: center;
   text-decoration: none;
+  overflow: hidden;
+}
+
+.game-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .game-card-rating {

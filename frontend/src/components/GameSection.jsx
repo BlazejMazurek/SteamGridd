@@ -1,6 +1,6 @@
+import { Link } from 'react-router-dom'
 import GameCard from './GameCard'
 import './GameSection.css'
-import { Link } from 'react-router-dom'
 
 function GameSection({ title, games, linkText, columns = 5 }) {
   return (
@@ -16,8 +16,9 @@ function GameSection({ title, games, linkText, columns = 5 }) {
         {games.map((game) => (
           <GameCard
             key={game.id}
-            id={game.id}
+            id={game.appId ?? game.id}
             title={game.title}
+            image={game.coverImage}
             rating={game.rating}
           />
         ))}

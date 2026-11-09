@@ -1,29 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import GameCard from '../components/GameCard'
+import { API_URL } from '../api'
 import './GamesPage.css'
 
-const allGames = [
-  { id: 1, title: 'Counter-Strike 2' },
-  { id: 2, title: 'Dota 2' },
-  { id: 3, title: 'Cyberpunk 2077' },
-  { id: 4, title: 'The Witcher 3' },
-  { id: 5, title: 'Elden Ring' },
-  { id: 6, title: 'Portal 2' },
-  { id: 7, title: 'Half-Life 2' },
-  { id: 8, title: 'Stardew Valley' },
-  { id: 9, title: 'Terraria' },
-  { id: 10, title: 'Hollow Knight' },
-  { id: 11, title: 'Hades' },
-  { id: 12, title: 'Left 4 Dead 2' },
-  { id: 13, title: 'Rust' },
-  { id: 14, title: 'Valheim' },
-  { id: 15, title: 'Baldur\'s Gate 3' },
-]
-
 function GamesPage() {
+  const [games, setGames] = useState([])
   const [query, setQuery] = useState('')
+  const [error, setError] = useState('')
 
-  const filteredGames = allGames.filter((game) =>
+  useEffect(() => {
+    fetch(`${API_URL}/games`)
+      .then((response) => response.json())
+      .then((data) => setGames(data))
+      .catch(() => setError('Nie udało się pobrać gier. Czy serwer działa?'))
+  }, [])
+
+  const filteredGames = games.filter((game) =>
     game.title.toLowerCase().includes(query.toLowerCase())
   )
 
@@ -39,12 +31,19 @@ function GamesPage() {
         placeholder="Szukaj gry po tytule..."
       />
 
-      {filteredGames.length === 0 ? (
+      {error && <p>{error}</p>}
+
+      {filteredGames.length === 0 && !error ? (
         <p>Nie znaleziono gier.</p>
       ) : (
         <div className="games-grid">
           {filteredGames.map((game) => (
-            <GameCard key={game.id} id={game.id} title={game.title} />
+            <GameCard
+              key={game.id}
+              id={game.appId}
+              title={game.title}
+              image={game.coverImage}
+            />
           ))}
         </div>
       )}
