@@ -5,7 +5,7 @@ import fs from 'fs';
 
 export const createReview = async (req, res) => {
     try {
-        const { rating, comment, gameId } = req.body;
+        const { rating, comment, appId } = req.body;
         const userId = req.user.userId;
         const numRating = Number(rating);
 
@@ -18,7 +18,7 @@ export const createReview = async (req, res) => {
         }
 
         const gameExists = await prisma.game.findUnique({
-            where: { appId: Number(gameId) }
+            where: { appId: Number(appId) }
         });
 
         if (!gameExists) {
@@ -28,7 +28,7 @@ export const createReview = async (req, res) => {
         const existingReview = await prisma.review.findFirst({
             where: {
                 userId: Number(userId),
-                gameId: Number(gameId)
+                appId: Number(appId)
             }
         });
 
@@ -65,7 +65,7 @@ export const createReview = async (req, res) => {
                     connect: {id: Number(userId)}
                 },
                 game: {
-                    connect: {appId: Number(gameId)} 
+                    connect: {appId: Number(appId)} 
                 }
             },
             include: {
@@ -88,13 +88,18 @@ export const createReview = async (req, res) => {
 
 export const getGameReviews = async (req, res) => {
     try {
-        const { gameId } = req.params;
+        const {appId} = req.params;
         const reviews = await prisma.review.findMany({
-            where: { gameId: Number(gameId) },
+            where: {
+                game: {
+                    appId: Number(appId)
+                }
+            },
             include: {
                 user: {
                     select: { username: true }
-                }
+                },
+                game: true
             }
         });
         res.json(reviews);

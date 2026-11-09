@@ -70,8 +70,8 @@ Content-Type: image/jpeg
 ------WebKitFormBoundary7MA4YWxkTrZu0gW--
 
 
-### Pobranie wszystkich recenzji dla konkretnej gry (zastąp 1 odpowiednim ID gry)
-GET http://localhost:5000/api/games/279/reviews
+### Pobranie wszystkich recenzji dla konkretnej gry
+GET http://localhost:5000/api/games/461040/reviews
 
 
 ###
