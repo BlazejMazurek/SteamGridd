@@ -13,7 +13,7 @@ export const createReview = async (req, res) => {
             return res.status(400).json({ error: 'Ocena musi być w przedziale od 0.5 do 5.0'});
         }
 
-        if (!appIdId) {
+        if (!appId) {
             return res.status(400).json({ error: 'ID gry jest wymagane.' });
         }
 
@@ -106,5 +106,34 @@ export const getGameReviews = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Błąd podczas pobierania recenzji.' });
+    }
+};
+
+export const getUserReviews = async (req, res) => {
+    try {
+        const userId = Number(req.params.id);
+
+        const reviews = await prisma.review.findMany({
+            where: {
+                userId: userId
+            },
+            include: {
+                game: {
+                    select: {
+                        appId: true,
+                        title: true,
+                        coverImage: true
+                    }
+                }
+            },
+            orderBy: {
+                createdAt: 'desc'
+            }
+        });
+
+        res.status(200).json(reviews);
+    } catch (error) {
+        console.error("Błąd podczas pobierania recenzji użytkownika:", error);
+        res.status(500).json({ error: 'Błąd serwera podczas pobierania recenzji.' });
     }
 };
