@@ -97,7 +97,10 @@ export const getGameReviews = async (req, res) => {
             },
             include: {
                 user: {
-                    select: { username: true }
+                    select:{
+                        username: true,
+                        avatarUrl: true
+                    }
                 },
                 game: true
             }

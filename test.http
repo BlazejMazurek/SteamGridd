@@ -72,8 +72,3 @@ Content-Type: image/jpeg
 
 ### Pobranie wszystkich recenzji dla konkretnej gry
 GET http://localhost:5000/api/games/461040/reviews
-
-
-###
-GET http://localhost:5000/api/user/me
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiUmFkb3NuYV9KYWdvZGE2OEBnbWFpbC5jb20iLCJpYXQiOjE3OTQxNjczNTEsImV4cCI6MTc5NDI1Mzc1MX0.q0C63wwUJ83DdJzr9vxYlFO6b8Kr6Gh5T7S8k2-tM9c
