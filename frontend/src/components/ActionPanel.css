@@ -58,3 +58,17 @@
   font-size: 12px;
   margin-top: 8px;
 }
+.action-icon {
+  filter: grayscale(1) brightness(0) invert(1);
+}
+
+.action-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+}
+
+.action-wide {
+  grid-column: 1 / -1;
+}

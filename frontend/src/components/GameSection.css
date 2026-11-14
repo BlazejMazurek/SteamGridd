@@ -27,3 +27,16 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 30px;
 }
+
+.game-section-row.scroll {
+  display: flex;
+  gap: 30px;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: #4a5ea8 transparent;
+}
+
+.game-section-row.scroll > * {
+  flex: 0 0 calc((100% - 90px) / 4);
+}

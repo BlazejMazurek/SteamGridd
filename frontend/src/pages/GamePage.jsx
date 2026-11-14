@@ -20,7 +20,7 @@ function GamePage() {
   function loadReviews() {
     fetch(`${API_URL}/games/${id}/reviews`)
       .then((response) => response.json())
-      .then((data) => setReviews(data))
+      .then((data) => setReviews(Array.isArray(data) ? data : []))
       .catch(() => setReviews([]))
   }
 
@@ -69,7 +69,7 @@ function GamePage() {
   if (error) return <main className="game-page"><p>{error}</p></main>
   if (!game) return <main className="game-page"><p>Ładowanie...</p></main>
 
-  const genres = game.genres ? game.genres.map((g) => g.name).join(' / ') : ''
+  const genreList = game.genres || []
 
   const average =
     reviews.length > 0
@@ -92,12 +92,27 @@ function GamePage() {
         <div className="game-title-row">
           <h1>{game.title}</h1>
           <span>{game.releaseDate}</span>
-          <span>{game.publisher ? game.publisher.name : ''}</span>
+          {game.publisher && (
+            <Link className="game-link" to={`/gry?wydawca=${game.publisher.id}`}>
+              {game.publisher.name}
+            </Link>
+          )}
         </div>
 
         <p className="game-description">{game.description}</p>
 
-        <h2 className="game-subtitle">Gatunek: {genres}</h2>
+        <h2 className="game-subtitle">
+          Gatunek:{' '}
+          {genreList.length === 0 && 'brak'}
+          {genreList.map((genre, index) => (
+            <span key={genre.id}>
+              {index > 0 && ' / '}
+              <Link className="game-link" to={`/gry?gatunek=${genre.id}`}>
+                {genre.name}
+              </Link>
+            </span>
+          ))}
+        </h2>
 
         <h2 className="game-subtitle">Średnia ocen:</h2>
         <div className="game-average">
@@ -149,7 +164,7 @@ function GamePage() {
         ))}
       </div>
 
-      <ActionPanel />
+      <ActionPanel appId={id} />
     </main>
   )
 }

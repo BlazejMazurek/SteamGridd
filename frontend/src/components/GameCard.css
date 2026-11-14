@@ -1,3 +1,7 @@
+.game-card-wrap {
+  position: relative;
+}
+
 .game-card {
   background: #d9d9d9;
   color: #111936;
@@ -16,6 +20,31 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.game-card-badges {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.game-card-badge {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #111936;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.game-card-badge-icon {
+  filter: grayscale(1) brightness(0) invert(1);
 }
 
 .game-card-rating {

@@ -16,7 +16,6 @@ function Header() {
         )}
         <Link to="/gry">Gry</Link>
         <Link to="/uzytkownicy">Użytkownicy</Link>
-        <Link to="/gry">Wyszukaj</Link>
       </nav>
     </header>
   )
