@@ -237,3 +237,116 @@ export const updateProfile = async (req, res) => {
         res.status(500).json({ error: 'Błąd serwera podczas aktualizacji profilu.' });
     }
 };
+
+export const getFavoriteStatus = async (req, res) => {
+
+    try {
+
+        const userId = req.user.userId;
+
+        const appId = Number(req.params.appId);
+ 
+        const found = await prisma.user.findFirst({
+
+            where: { id: userId, favoriteGames: { some: { appId } } },
+
+            select: { id: true }
+
+        });
+ 
+        res.status(200).json({ isFavorite: Boolean(found) });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({ error: 'Błąd serwera podczas sprawdzania ulubionych.' });
+
+    }
+
+};
+ 
+export const setFavorite = async (req, res) => {
+
+    try {
+
+        const userId = req.user.userId;
+
+        const appId = Number(req.params.appId);
+
+        const { value } = req.body;
+ 
+        if (typeof value !== 'boolean') {
+
+            return res.status(400).json({ error: 'Nieprawidłowe dane.' });
+
+        }
+ 
+        const game = await prisma.game.findUnique({ where: { appId } });
+
+        if (!game) {
+
+            return res.status(404).json({ error: 'Nie znaleziono gry.' });
+
+        }
+ 
+        if (value) {
+
+            const alreadyFavorite = await prisma.user.findFirst({
+
+                where: { id: userId, favoriteGames: { some: { appId } } },
+
+                select: { id: true }
+
+            });
+ 
+            if (!alreadyFavorite) {
+
+                const me = await prisma.user.findUnique({
+
+                    where: { id: userId },
+
+                    select: { _count: { select: { favoriteGames: true } } }
+
+                });
+
+                if (me._count.favoriteGames >= 4) {
+
+                    return res.status(400).json({ error: 'Możesz mieć maksymalnie 4 ulubione gry.' });
+
+                }
+
+            }
+ 
+            await prisma.user.update({
+
+                where: { id: userId },
+
+                data: { favoriteGames: { connect: { id: game.id } } }
+
+            });
+
+        } else {
+
+            await prisma.user.update({
+
+                where: { id: userId },
+
+                data: { favoriteGames: { disconnect: { id: game.id } } }
+
+            });
+
+        }
+ 
+        res.status(200).json({ isFavorite: value });
+
+    } catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({ error: 'Błąd serwera podczas zapisywania ulubionych.' });
+
+    }
+
+};
+ 
