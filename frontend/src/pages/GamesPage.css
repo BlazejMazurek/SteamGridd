@@ -15,12 +15,126 @@
 .games-search {
   width: 100%;
   padding: 12px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   background: #1b2a5e;
   border: 1px solid #4a5ea8;
   color: white;
   font-family: inherit;
   font-size: 16px;
+}
+
+.games-filters {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.games-filter {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #9aa3d0;
+  flex: 1;
+  min-width: 180px;
+}
+
+.games-filter select,
+.games-filter input {
+  padding: 10px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.games-filter-publisher {
+  position: relative;
+  flex: 2;
+}
+
+.publisher-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  border-top: none;
+}
+
+.publisher-suggestion,
+.publisher-empty {
+  padding: 10px;
+  font-size: 14px;
+  color: white;
+  border-top: 1px solid #26397a;
+}
+
+.publisher-suggestion {
+  cursor: pointer;
+}
+
+.publisher-suggestion:hover {
+  background: #26397a;
+}
+
+.publisher-empty {
+  color: #9aa3d0;
+}
+
+.publisher-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  margin-top: 4px;
+  padding: 4px 10px;
+  background: white;
+  color: #111936;
+  font-size: 13px;
+}
+
+.publisher-chip button {
+  background: transparent;
+  border: none;
+  color: #111936;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+}
+
+.games-clear,
+.games-more {
+  background: transparent;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 10px 16px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.games-clear:hover,
+.games-more:hover {
+  background: #1b2a5e;
+}
+
+.games-more {
+  display: block;
+  margin: 30px auto 0;
+}
+
+.games-count {
+  font-size: 13px;
+  color: #9aa3d0;
+  margin-bottom: 16px;
 }
 
 .games-grid {
