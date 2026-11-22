@@ -133,3 +133,65 @@
 .game-link:hover {
   color: white;
 }
+
+.game-page.blurred {
+  filter: blur(25px);
+  pointer-events: none;
+  user-select: none;
+}
+
+.age-gate {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: rgba(17, 25, 54, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.age-gate-box {
+  background: #1b2a5e;
+  border: 2px solid #ffffff;
+  padding: 50px 70px;
+  text-align: center;
+  max-width: 90%;
+}
+
+.age-gate-box h1 {
+  font-size: 56px;
+  font-weight: normal;
+  margin: 0 0 20px;
+}
+
+.age-gate-box p {
+  font-size: 26px;
+  margin: 0 0 35px;
+}
+
+.age-gate-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.age-gate-buttons button {
+  font-family: inherit;
+  font-size: 20px;
+  padding: 12px 50px;
+  border: none;
+  cursor: pointer;
+}
+
+.age-gate-yes {
+  background: #ffffff;
+  color: #111936;
+}
+
+.age-gate-no {
+  background: #4a5ea8;
+  color: #ffffff;
+}

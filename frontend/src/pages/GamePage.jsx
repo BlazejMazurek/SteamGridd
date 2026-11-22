@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useNavigate } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 import ActionPanel from '../components/ActionPanel'
 import { API_URL } from '../api'
@@ -9,12 +9,14 @@ const ratingOptions = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 
 function GamePage() {
   const { id } = useParams()
+  const navigate = useNavigate()
   const [game, setGame] = useState(null)
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState('')
   const [formError, setFormError] = useState('')
   const [text, setText] = useState('')
   const [rating, setRating] = useState('4')
+  const [ageConfirmed, setAgeConfirmed] = useState(false)
   const token = localStorage.getItem('token')
 
   function loadReviews() {
@@ -25,6 +27,7 @@ function GamePage() {
   }
 
   useEffect(() => {
+    setAgeConfirmed(false)
     fetch(`${API_URL}/games/steam/${id}`)
       .then((response) => {
         if (!response.ok) throw new Error('not found')
@@ -69,6 +72,7 @@ function GamePage() {
   if (error) return <main className="game-page"><p>{error}</p></main>
   if (!game) return <main className="game-page"><p>Ładowanie...</p></main>
 
+  const locked = game.isAdult && !ageConfirmed
   const genreList = game.genres || []
 
   const average =
@@ -77,95 +81,114 @@ function GamePage() {
       : '-'
 
   return (
-    <main className="game-page">
-      <div className="game-cover">
-        {game.coverImage && (
-          <img
-            src={game.coverImage}
-            alt={game.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        )}
-      </div>
+    <>
+      {locked && (
+        <div className="age-gate" role="dialog" aria-modal="true" aria-labelledby="age-gate-title">
+          <div className="age-gate-box">
+            <h1 id="age-gate-title">Treść 18+</h1>
+            <p>Czy masz ukończone 18 lat?</p>
+            <div className="age-gate-buttons">
+              <button type="button" className="age-gate-yes" onClick={() => setAgeConfirmed(true)}>
+                Tak
+              </button>
+              <button type="button" className="age-gate-no" onClick={() => navigate('/')}>
+                Nie
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
-      <div className="game-info">
-        <div className="game-title-row">
-          <h1>{game.title}</h1>
-          <span>{game.releaseDate}</span>
-          {game.publisher && (
-            <Link className="game-link" to={`/gry?wydawca=${game.publisher.id}`}>
-              {game.publisher.name}
-            </Link>
+      <main className={locked ? 'game-page blurred' : 'game-page'}>
+        <div className="game-cover">
+          {game.coverImage && (
+            <img
+              src={game.coverImage}
+              alt={game.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
           )}
         </div>
 
-        <p className="game-description">{game.description}</p>
-
-        <h2 className="game-subtitle">
-          Gatunek:{' '}
-          {genreList.length === 0 && 'brak'}
-          {genreList.map((genre, index) => (
-            <span key={genre.id}>
-              {index > 0 && ' / '}
-              <Link className="game-link" to={`/gry?gatunek=${genre.id}`}>
-                {genre.name}
+        <div className="game-info">
+          <div className="game-title-row">
+            <h1>{game.title}</h1>
+            <span>{game.releaseDate}</span>
+            {game.publisher && (
+              <Link className="game-link" to={`/gry?wydawca=${game.publisher.id}`}>
+                {game.publisher.name}
               </Link>
-            </span>
-          ))}
-        </h2>
+            )}
+          </div>
 
-        <h2 className="game-subtitle">Średnia ocen:</h2>
-        <div className="game-average">
-          <span>★</span>
-          <span>{average}</span>
+          <p className="game-description">{game.description}</p>
+
+          <h2 className="game-subtitle">
+            Gatunek:{' '}
+            {genreList.length === 0 && 'brak'}
+            {genreList.map((genre, index) => (
+              <span key={genre.id}>
+                {index > 0 && ' / '}
+                <Link className="game-link" to={`/gry?gatunek=${genre.id}`}>
+                  {genre.name}
+                </Link>
+              </span>
+            ))}
+          </h2>
+
+          <h2 className="game-subtitle">Średnia ocen:</h2>
+          <div className="game-average">
+            <span>★</span>
+            <span>{average}</span>
+          </div>
+
+          <h2 className="game-comments-title">Dodaj komentarz:</h2>
+          {token ? (
+            <form className="comment-form" onSubmit={handleSubmit}>
+              <textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Napisz, co sądzisz o tej grze..."
+                rows={3}
+              />
+              <div className="comment-form-row">
+                <label>
+                  Ocena:
+                  <select value={rating} onChange={(e) => setRating(e.target.value)}>
+                    {ratingOptions.map((n) => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
+                  </select>
+                </label>
+                <button type="submit">Dodaj</button>
+              </div>
+              {formError && <div className="auth-error">{formError}</div>}
+            </form>
+          ) : (
+            <p>
+              <Link to="/logowanie">Zaloguj się</Link>, aby dodać komentarz.
+            </p>
+          )}
+
+          <h2 className="game-comments-title">Ostatnie komentarze:</h2>
+          {reviews.length === 0 && <p>Brak komentarzy. Bądź pierwszy!</p>}
+          {reviews.map((review) => (
+            <div className="comment" key={review.id}>
+              <div className="comment-avatar"></div>
+              <div className="comment-body">
+                <div className="comment-head">
+                  <span>{review.user ? review.user.username : 'użytkownik'}</span>
+                  <StarRating value={Number(review.rating)} size={16} />
+                </div>
+                <p>{review.comment}</p>
+              </div>
+            </div>
+          ))}
         </div>
 
-        <h2 className="game-comments-title">Dodaj komentarz:</h2>
-        {token ? (
-          <form className="comment-form" onSubmit={handleSubmit}>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Napisz, co sądzisz o tej grze..."
-              rows={3}
-            />
-            <div className="comment-form-row">
-              <label>
-                Ocena:
-                <select value={rating} onChange={(e) => setRating(e.target.value)}>
-                  {ratingOptions.map((n) => (
-                    <option key={n} value={n}>{n}</option>
-                  ))}
-                </select>
-              </label>
-              <button type="submit">Dodaj</button>
-            </div>
-            {formError && <div className="auth-error">{formError}</div>}
-          </form>
-        ) : (
-          <p>
-            <Link to="/logowanie">Zaloguj się</Link>, aby dodać komentarz.
-          </p>
-        )}
-
-        <h2 className="game-comments-title">Ostatnie komentarze:</h2>
-        {reviews.length === 0 && <p>Brak komentarzy. Bądź pierwszy!</p>}
-        {reviews.map((review) => (
-          <div className="comment" key={review.id}>
-            <div className="comment-avatar"></div>
-            <div className="comment-body">
-              <div className="comment-head">
-                <span>{review.user ? review.user.username : 'użytkownik'}</span>
-                <StarRating value={Number(review.rating)} size={16} />
-              </div>
-              <p>{review.comment}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <ActionPanel appId={id} />
-    </main>
+        <ActionPanel appId={id} />
+      </main>
+    </>
   )
 }
 
