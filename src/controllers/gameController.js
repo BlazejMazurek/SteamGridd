@@ -2,7 +2,7 @@ import prisma from '../config/db.js';
 
 export const getGames = async (req, res) => {
     try {
-        const { genres, publisherId, developerId, search } = req.query;
+        const { genres, publisherId, developerId,  search } = req.query;
         let whereCondition = {};
 
         if (genres) {

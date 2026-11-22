@@ -56,7 +56,7 @@ async function main() {
                 const genresList = data.genres || [];
 
                 const gameData = {
-                    appId, // <-- appId jest teraz wewnątrz obiektu
+                    appId,
                     title,
                     description,
                     releaseDate,
