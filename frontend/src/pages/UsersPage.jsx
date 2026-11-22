@@ -42,7 +42,9 @@ function UsersPage() {
         <div className="users-list">
           {filteredUsers.map((user) => (
             <Link to={`/uzytkownik/${user.id}`} className="user-row" key={user.id}>
-              <div className="user-avatar"></div>
+              <div className="user-avatar">
+                {user.avatarUrl && <img src={user.avatarUrl} alt="" />}
+              </div>
               <div className="user-info">
                 <span className="user-name">{user.username}</span>
                 <span className="user-meta">

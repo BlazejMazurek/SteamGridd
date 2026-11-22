@@ -143,7 +143,9 @@ function ProfilePage() {
     <main className="profile-page">
       <div className="profile-main">
         <div className="profile-header">
-          <div className="profile-avatar"></div>
+          <div className="profile-avatar">
+            {user.avatarUrl && <img src={user.avatarUrl} alt="" />}
+          </div>
           <div>
             <h1>{user.username}</h1>
             <p>ulubiony gatunek: {user.favoriteGenre ? user.favoriteGenre.name : 'brak'}</p>
@@ -194,7 +196,7 @@ function ProfilePage() {
               title="Ostatnio ograne gry"
               games={recentGames}
               scroll
-              emptyText="Brak ograniych gier. Kliknij „ograne” na stronie gry."
+              emptyText="Brak ogranych gier. Kliknij „ograne” na stronie gry."
             />
           </>
         )}

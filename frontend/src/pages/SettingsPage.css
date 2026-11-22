@@ -1,0 +1,180 @@
+.settings-page {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 0 20px;
+}
+
+.settings-page h1 {
+  font-size: 30px;
+  font-weight: normal;
+  border-bottom: 1px solid white;
+  padding-bottom: 10px;
+  margin: 0 0 30px;
+}
+
+.settings-avatar-row {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.settings-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #d9d9d9;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.settings-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.settings-label {
+  font-size: 15px;
+  margin-bottom: 8px;
+}
+
+.settings-file-button {
+  display: inline-block;
+  padding: 8px 16px;
+  font-size: 14px;
+  border: 1px solid #4a5ea8;
+  cursor: pointer;
+}
+
+.settings-file-button:hover,
+.settings-file-button:focus-within {
+  background: #1b2a5e;
+}
+
+.settings-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.settings-hint {
+  font-size: 12px;
+  color: #9aa3d0;
+  margin-top: 6px;
+}
+
+.settings-fields {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.settings-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: #9aa3d0;
+  flex: 1;
+  min-width: 220px;
+}
+
+.settings-field input,
+.settings-field select {
+  padding: 10px;
+  background: #1b2a5e;
+  border: 1px solid #4a5ea8;
+  color: white;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+.settings-toggle-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 16px;
+  background: #1b2a5e;
+  margin-bottom: 30px;
+}
+
+.settings-toggle-title {
+  font-size: 15px;
+}
+
+.settings-switch {
+  width: 46px;
+  height: 26px;
+  border-radius: 13px;
+  border: none;
+  background: #4a5078;
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.settings-switch.on {
+  background: #4a5ea8;
+}
+
+.settings-switch-knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: white;
+}
+
+.settings-switch.on .settings-switch-knob {
+  left: 23px;
+}
+
+.settings-buttons {
+  display: flex;
+  gap: 14px;
+  margin-top: 20px;
+}
+
+.settings-save,
+.settings-logout {
+  font-family: inherit;
+  font-size: 15px;
+  padding: 11px 28px;
+  cursor: pointer;
+  border: 1px solid #4a5ea8;
+}
+
+.settings-save {
+  background: white;
+  color: #111936;
+  border-color: white;
+}
+
+.settings-save:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.settings-logout {
+  background: transparent;
+  color: white;
+}
+
+.settings-logout:hover {
+  background: #1b2a5e;
+}
+
+.settings-ok {
+  color: #9be8a8;
+  font-size: 14px;
+  margin-top: 10px;
+}

@@ -7,6 +7,10 @@
   gap: 50px;
 }
 
+.profile-main {
+  min-width: 0;
+}
+
 .profile-header {
   display: flex;
   align-items: center;
@@ -22,6 +26,14 @@
   border-radius: 50%;
   background: #d9d9d9;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .profile-header h1 {
@@ -52,6 +64,7 @@
 
 .profile-tabs {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 30px;
   border-bottom: 1px solid white;
@@ -70,6 +83,7 @@
 .profile-tab.active {
   color: white;
   background: #1b2a5e;
+  border-bottom: 2px solid white;
 }
 
 .profile-comment {
@@ -115,10 +129,6 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 8px 0 0;
-}
-
-.profile-tab.active {
-  border-bottom: 2px solid white;
 }
 
 .library-filters {

@@ -16,7 +16,9 @@ function GamePage() {
   const [formError, setFormError] = useState('')
   const [text, setText] = useState('')
   const [rating, setRating] = useState('4')
-  const [ageConfirmed, setAgeConfirmed] = useState(false)
+  const [ageConfirmed, setAgeConfirmed] = useState(
+    localStorage.getItem('ageConfirmed') === 'yes'
+  )
   const token = localStorage.getItem('token')
 
   function loadReviews() {
@@ -27,7 +29,7 @@ function GamePage() {
   }
 
   useEffect(() => {
-    setAgeConfirmed(false)
+    setAgeConfirmed(localStorage.getItem('ageConfirmed') === 'yes')
     fetch(`${API_URL}/games/steam/${id}`)
       .then((response) => {
         if (!response.ok) throw new Error('not found')

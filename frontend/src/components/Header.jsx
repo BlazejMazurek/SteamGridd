@@ -10,7 +10,10 @@ function Header() {
       <Link to="/" className="header-logo">Nazwa Robocza</Link>
       <nav className="header-menu">
         {loggedIn ? (
-          <Link to="/profil">Konto</Link>
+          <>
+            <Link to="/profil">Konto</Link>
+            <Link to="/ustawienia">Ustawienia</Link>
+          </>
         ) : (
           <Link to="/logowanie">Zaloguj</Link>
         )}
