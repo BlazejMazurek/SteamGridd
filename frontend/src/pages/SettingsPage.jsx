@@ -7,7 +7,8 @@ function SettingsPage() {
   const navigate = useNavigate()
   const token = localStorage.getItem('token')
 
-  const [loaded, setLoaded] = useState(false)
+  const [user, setUser] = useState(null)
+  const [queueCount, setQueueCount] = useState(0)
   const [username, setUsername] = useState('')
   const [genreId, setGenreId] = useState('')
   const [genres, setGenres] = useState([])
@@ -32,10 +33,15 @@ function SettingsPage() {
         return response.json()
       })
       .then((data) => {
+        setUser(data)
         setUsername(data.username || '')
         setGenreId(data.favoriteGenre ? String(data.favoriteGenre.id) : '')
         setAvatarUrl(data.avatarUrl || '')
-        setLoaded(true)
+
+        fetch(`${API_URL}/user/${data.id}/games/queued`)
+          .then((response) => response.json())
+          .then((list) => setQueueCount(Array.isArray(list) ? list.length : 0))
+          .catch(() => {})
       })
       .catch(() => setError('Nie udało się pobrać danych konta.'))
 
@@ -119,7 +125,10 @@ function SettingsPage() {
       if (remember18) localStorage.setItem('ageConfirmed', 'yes')
       else localStorage.removeItem('ageConfirmed')
 
-      if (data.user && data.user.avatarUrl) setAvatarUrl(data.user.avatarUrl)
+      if (data.user) {
+        if (data.user.avatarUrl) setAvatarUrl(data.user.avatarUrl)
+        setUser({ ...user, username: data.user.username })
+      }
       setFile(null)
       setPreview('')
       setMessage('Zapisano zmiany.')
@@ -144,7 +153,7 @@ function SettingsPage() {
     )
   }
 
-  if (!loaded && !error) {
+  if (!user && !error) {
     return (
       <main className="settings-page">
         <p>Ładowanie...</p>
@@ -153,82 +162,121 @@ function SettingsPage() {
   }
 
   const shownAvatar = preview || avatarUrl
+  const commentsCount = user ? user.reviews.filter((review) => review.comment).length : 0
+  const memberSince =
+    user && user.createdAt ? new Date(user.createdAt).toLocaleDateString('pl-PL') : ''
 
   return (
     <main className="settings-page">
-      <h1>Ustawienia</h1>
-
-      <form onSubmit={handleSave}>
-        <div className="settings-avatar-row">
-          <div className="settings-avatar">
-            {shownAvatar && <img src={shownAvatar} alt="Zdjęcie profilowe" />}
+      <aside className="settings-side">
+        <div className="settings-card settings-profile">
+          <div className="settings-side-avatar">
+            {shownAvatar && <img src={shownAvatar} alt="" />}
           </div>
-          <div>
-            <div className="settings-label">Zdjęcie profilowe</div>
-            <label className="settings-file-button">
-              Wybierz zdjęcie
-              <input
-                className="settings-file-input"
-                type="file"
-                accept="image/*"
-                onChange={handleFile}
-              />
-            </label>
-            <div className="settings-hint">JPG lub PNG, maksymalnie 5 MB</div>
-          </div>
-        </div>
+          <div className="settings-side-name">{user ? user.username : ''}</div>
+          {memberSince && <div className="settings-side-since">od {memberSince}</div>}
 
-        <div className="settings-fields">
-          <label className="settings-field">
-            Nazwa użytkownika
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </label>
-
-          <label className="settings-field">
-            Ulubiony gatunek
-            <select value={genreId} onChange={(e) => setGenreId(e.target.value)}>
-              <option value="">Brak</option>
-              {genres.map((genre) => (
-                <option key={genre.id} value={genre.id}>
-                  {genre.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        </div>
-
-        <div className="settings-toggle-row">
-          <div>
-            <div className="settings-toggle-title">Treści 18+</div>
-            <div className="settings-hint">
-              Zapamiętaj potwierdzenie wieku na tym urządzeniu
+          <div className="settings-stats">
+            <div>
+              <div className="settings-stat-number">{user ? user.reviews.length : 0}</div>
+              <div className="settings-stat-label">oceny</div>
+            </div>
+            <div>
+              <div className="settings-stat-number">{queueCount}</div>
+              <div className="settings-stat-label">do ogrania</div>
+            </div>
+            <div>
+              <div className="settings-stat-number">{commentsCount}</div>
+              <div className="settings-stat-label">komentarze</div>
             </div>
           </div>
-          <button
-            type="button"
-            role="switch"
-            aria-checked={remember18}
-            aria-label="Zapamiętaj potwierdzenie wieku"
-            className={remember18 ? 'settings-switch on' : 'settings-switch'}
-            onClick={() => setRemember18(!remember18)}
-          >
-            <span className="settings-switch-knob"></span>
-          </button>
+
+          <nav className="settings-nav">
+            <a href="#profil" className="settings-nav-item active">Profil</a>
+            <a href="#tresci" className="settings-nav-item">Treści 18+</a>
+            <button type="button" className="settings-nav-item danger" onClick={handleLogout}>
+              Wyloguj
+            </button>
+          </nav>
         </div>
+      </aside>
 
-        {error && <div className="auth-error">{error}</div>}
-        {message && <div className="settings-ok">{message}</div>}
+      <form className="settings-card settings-main" onSubmit={handleSave}>
+        <section id="profil">
+          <h1>Profil</h1>
+          <p className="settings-sub">Te dane widzą inni użytkownicy.</p>
 
-        <div className="settings-buttons">
+          <div className="settings-avatar-row">
+            <div className="settings-avatar">
+              {shownAvatar && <img src={shownAvatar} alt="Zdjęcie profilowe" />}
+            </div>
+            <div>
+              <div className="settings-label">Zdjęcie profilowe</div>
+              <div className="settings-hint">JPG lub PNG, maksymalnie 5 MB</div>
+              <label className="settings-file-button">
+                Zmień zdjęcie
+                <input
+                  className="settings-file-input"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFile}
+                />
+              </label>
+            </div>
+          </div>
+
+          <div className="settings-fields">
+            <label className="settings-field">
+              Nazwa użytkownika
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </label>
+
+            <label className="settings-field">
+              Ulubiony gatunek
+              <select value={genreId} onChange={(e) => setGenreId(e.target.value)}>
+                <option value="">Brak</option>
+                {genres.map((genre) => (
+                  <option key={genre.id} value={genre.id}>
+                    {genre.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section id="tresci">
+          <div className="settings-toggle-row">
+            <div>
+              <div className="settings-toggle-title">Treści 18+</div>
+              <div className="settings-hint">
+                Zapamiętaj potwierdzenie wieku na tym urządzeniu
+              </div>
+            </div>
+            <button
+              type="button"
+              role="switch"
+              aria-checked={remember18}
+              aria-label="Zapamiętaj potwierdzenie wieku"
+              className={remember18 ? 'settings-switch on' : 'settings-switch'}
+              onClick={() => setRemember18(!remember18)}
+            >
+              <span className="settings-switch-knob"></span>
+            </button>
+          </div>
+        </section>
+
+        <div className="settings-footer">
+          <div className="settings-messages">
+            {error && <span className="settings-error">{error}</span>}
+            {message && <span className="settings-ok">{message}</span>}
+          </div>
           <button type="submit" className="settings-save" disabled={saving}>
             {saving ? 'Zapisywanie...' : 'Zapisz zmiany'}
-          </button>
-          <button type="button" className="settings-logout" onClick={handleLogout}>
-            Wyloguj
           </button>
         </div>
       </form>

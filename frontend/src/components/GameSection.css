@@ -1,36 +1,39 @@
 .game-section {
-  margin-bottom: 60px;
+  margin-bottom: 40px;
 }
 
 .game-section-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  border-bottom: 1px solid white;
-  margin-bottom: 25px;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
 }
 
 .game-section-header h2 {
   margin: 0;
-  font-size: 20px;
-  font-weight: normal;
+  font-size: 18px;
+  font-weight: 600;
 }
 
 .game-section-header a {
-  color: white;
+  color: var(--accent);
   text-decoration: none;
-  font-size: 14px;
+  font-size: 13px;
+}
+
+.game-section-header a:hover {
+  text-decoration: underline;
 }
 
 .game-section-row {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 30px;
+  gap: 20px;
 }
 
 .game-section-row.scroll {
   display: flex;
-  gap: 30px;
   overflow-x: auto;
   padding-bottom: 12px;
   scrollbar-width: thin;
@@ -38,5 +41,19 @@
 }
 
 .game-section-row.scroll > * {
-  flex: 0 0 calc((100% - 90px) / 4);
+  flex: 0 0 calc((100% - 60px) / 4);
+}
+
+@media (max-width: 700px) {
+  .game-section-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .game-section-row.scroll {
+    display: flex;
+  }
+
+  .game-section-row.scroll > * {
+    flex: 0 0 45%;
+  }
 }

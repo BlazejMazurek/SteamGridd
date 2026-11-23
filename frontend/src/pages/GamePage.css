@@ -1,137 +1,184 @@
 .game-page {
-  max-width: 1000px;
-  margin: 60px auto;
-  padding: 0 20px;
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px;
   display: grid;
-  grid-template-columns: 200px 1fr 220px;
-  gap: 40px;
+  grid-template-columns: 240px minmax(0, 1fr) 260px;
+  gap: 28px;
+  align-items: start;
 }
 
 .game-cover {
-  background: #d9d9d9;
   aspect-ratio: 3 / 4;
+  border-radius: var(--radius);
   overflow: hidden;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.game-info {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
 }
 
 .game-title-row {
   display: flex;
   align-items: baseline;
-  gap: 30px;
-  border-bottom: 1px solid white;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
 }
 
 .game-title-row h1 {
   margin: 0;
-  font-size: 36px;
-  font-weight: normal;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.game-title-row span {
+  font-size: 14px;
+  color: var(--muted);
 }
 
 .game-description {
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #cfd8ff;
+  margin: 18px 0;
 }
 
 .game-subtitle {
-  font-size: 20px;
-  font-weight: normal;
-  border-bottom: 1px solid white;
-  margin: 30px 0 10px;
+  font-size: 15px;
+  font-weight: 600;
+  margin: 22px 0 8px;
+}
+
+.game-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.game-link:hover {
+  text-decoration: underline;
 }
 
 .game-average {
   display: flex;
   align-items: center;
-  gap: 20px;
-  font-size: 40px;
+  gap: 14px;
+  font-size: 34px;
+  font-weight: 700;
+}
+
+.game-average span:first-child {
+  color: var(--accent);
 }
 
 .game-comments-title {
-  font-size: 20px;
-  font-weight: normal;
-  margin: 40px 0 20px;
+  font-size: 16px;
+  font-weight: 600;
+  margin: 32px 0 14px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
 }
 
 .comment {
   display: flex;
-  gap: 15px;
-  margin-bottom: 25px;
+  gap: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .comment-avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #d9d9d9;
+  background: #4a5ea8;
   flex-shrink: 0;
+}
+
+.comment-body {
+  min-width: 0;
 }
 
 .comment-head {
   display: flex;
   align-items: center;
-  gap: 15px;
-  border-bottom: 1px solid white;
+  gap: 12px;
   font-size: 14px;
+  font-weight: 600;
 }
 
 .comment-body p {
-  font-size: 12px;
+  font-size: 14px;
   line-height: 1.5;
-  margin: 8px 0 0;
+  margin: 6px 0 0;
+  color: #cfd8ff;
 }
 
 .comment-form {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 30px;
+  margin-bottom: 8px;
 }
 
 .comment-form textarea {
-  padding: 10px;
-  background: #1b2a5e;
-  border: 1px solid #4a5ea8;
-  color: white;
-  font-family: inherit;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
   font-size: 14px;
   resize: vertical;
+}
+
+.comment-form textarea:focus,
+.comment-form select:focus {
+  outline: 2px solid var(--accent);
 }
 
 .comment-form-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+}
+
+.comment-form label {
+  font-size: 14px;
+  color: var(--muted);
 }
 
 .comment-form select {
   margin-left: 8px;
-  padding: 6px;
-  background: #1b2a5e;
-  border: 1px solid #4a5ea8;
-  color: white;
-  font-family: inherit;
+  padding: 7px 10px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
 }
 
 .comment-form button {
-  padding: 8px 24px;
-  background: #4a5ea8;
+  padding: 9px 22px;
+  background: var(--accent);
   border: none;
-  color: white;
-  font-family: inherit;
+  border-radius: var(--radius-sm);
+  color: var(--bg);
   font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .comment-form button:hover {
-  background: #5b70c2;
-}
-
-.game-link {
-  color: #9aa3d0;
-  text-decoration: underline;
-}
-
-.game-link:hover {
-  color: white;
+  background: #9cc4ff;
 }
 
 .game-page.blurred {
@@ -142,56 +189,76 @@
 
 .age-gate {
   position: fixed;
-  top: 60px;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   z-index: 50;
-  background: rgba(17, 25, 54, 0.7);
+  background: rgba(13, 19, 48, 0.75);
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .age-gate-box {
-  background: #1b2a5e;
-  border: 2px solid #ffffff;
-  padding: 50px 70px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 64px;
   text-align: center;
   max-width: 90%;
 }
 
 .age-gate-box h1 {
-  font-size: 56px;
-  font-weight: normal;
-  margin: 0 0 20px;
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0 0 16px;
 }
 
 .age-gate-box p {
-  font-size: 26px;
-  margin: 0 0 35px;
+  font-size: 22px;
+  color: var(--muted);
+  margin: 0 0 32px;
 }
 
 .age-gate-buttons {
   display: flex;
-  gap: 20px;
+  gap: 16px;
   justify-content: center;
 }
 
 .age-gate-buttons button {
-  font-family: inherit;
-  font-size: 20px;
-  padding: 12px 50px;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 12px 48px;
   border: none;
+  border-radius: var(--radius-sm);
   cursor: pointer;
 }
 
 .age-gate-yes {
-  background: #ffffff;
-  color: #111936;
+  background: var(--accent);
+  color: var(--bg);
 }
 
 .age-gate-no {
-  background: #4a5ea8;
-  color: #ffffff;
+  background: var(--surface-3);
+  color: var(--text);
+}
+
+@media (max-width: 1000px) {
+  .game-page {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .action-panel {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 700px) {
+  .game-page {
+    grid-template-columns: 1fr;
+  }
+
+  .game-cover {
+    max-width: 240px;
+  }
 }

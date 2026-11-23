@@ -1,10 +1,47 @@
+:root {
+  --bg: #0d1330;
+  --surface: #141c45;
+  --surface-2: #1c2655;
+  --surface-3: #26397a;
+  --border: #26397a;
+  --text: #e8ecff;
+  --muted: #8e9acb;
+  --accent: #6ea8ff;
+  --danger: #ff9a9a;
+  --ok: #8fe3a2;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
 * {
   box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background-color: #111936;
-  color: white;
-  font-family: 'Courier New', monospace;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+img {
+  max-width: 100%;
 }

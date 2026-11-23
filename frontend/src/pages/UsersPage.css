@@ -1,53 +1,59 @@
 .users-page {
-  max-width: 800px;
-  margin: 60px auto;
-  padding: 0 20px;
+  max-width: 900px;
+  margin: 32px auto;
+  padding: 0 24px;
 }
 
 .users-page h1 {
-  font-size: 30px;
-  font-weight: normal;
-  border-bottom: 1px solid white;
-  padding-bottom: 10px;
-  margin: 0 0 25px;
+  font-size: 26px;
+  font-weight: 600;
+  margin: 0 0 20px;
 }
 
 .users-search {
   width: 100%;
-  padding: 12px;
-  margin-bottom: 30px;
-  background: #1b2a5e;
-  border: 1px solid #4a5ea8;
-  color: white;
-  font-family: inherit;
-  font-size: 16px;
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.users-search:focus {
+  outline: 2px solid var(--accent);
 }
 
 .users-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .user-row {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 16px;
   padding: 12px 16px;
-  background: #1b2a5e;
-  color: white;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
   text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
 }
 
 .user-row:hover {
-  background: #26397a;
+  background: var(--surface-2);
+  border-color: var(--accent);
 }
 
 .user-avatar {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background: #d9d9d9;
+  background: #4a5ea8;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -62,14 +68,15 @@
 .user-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .user-name {
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .user-meta {
   font-size: 13px;
-  color: #9aa3d0;
+  color: var(--muted);
 }

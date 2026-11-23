@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import HomePage from './pages/HomePage'
 import GamePage from './pages/GamePage'
 import GamesPage from './pages/GamesPage'
@@ -24,6 +25,7 @@ function App() {
         <Route path="/rejestracja" element={<RegisterPage />} />
         <Route path="/ustawienia" element={<SettingsPage />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   )
 }

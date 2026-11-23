@@ -1,33 +1,34 @@
 .settings-page {
-  max-width: 700px;
-  margin: 60px auto;
-  padding: 0 20px;
-}
-
-.settings-page h1 {
-  font-size: 30px;
-  font-weight: normal;
-  border-bottom: 1px solid white;
-  padding-bottom: 10px;
-  margin: 0 0 30px;
-}
-
-.settings-avatar-row {
-  display: flex;
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
   gap: 24px;
-  align-items: center;
-  margin-bottom: 30px;
+  align-items: start;
 }
 
-.settings-avatar {
-  width: 110px;
-  height: 110px;
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.settings-profile {
+  padding: 20px;
+  text-align: center;
+}
+
+.settings-side-avatar {
+  width: 84px;
+  height: 84px;
   border-radius: 50%;
-  background: #d9d9d9;
+  background: #4a5ea8;
+  margin: 0 auto 10px;
   overflow: hidden;
-  flex-shrink: 0;
 }
 
+.settings-side-avatar img,
 .settings-avatar img {
   width: 100%;
   height: 100%;
@@ -35,22 +36,128 @@
   display: block;
 }
 
+.settings-side-name {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.settings-side-since {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.settings-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin: 18px 0;
+  padding: 14px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.settings-stat-number {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.settings-stat-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.settings-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.settings-nav-item {
+  display: block;
+  width: 100%;
+  padding: 9px 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: #b9c3f0;
+  font-size: 14px;
+  text-decoration: none;
+  text-align: left;
+  cursor: pointer;
+}
+
+.settings-nav-item:hover {
+  background: var(--surface-2);
+}
+
+.settings-nav-item.active {
+  background: var(--surface-3);
+  color: #ffffff;
+}
+
+.settings-nav-item.danger {
+  color: var(--danger);
+}
+
+.settings-main {
+  padding: 28px;
+}
+
+.settings-main h1 {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.settings-sub {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 4px 0 24px;
+}
+
+.settings-avatar-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.settings-avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: #4a5ea8;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
 .settings-label {
   font-size: 15px;
-  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.settings-hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 3px 0 10px;
 }
 
 .settings-file-button {
   display: inline-block;
   padding: 8px 16px;
-  font-size: 14px;
   border: 1px solid #4a5ea8;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
   cursor: pointer;
 }
 
 .settings-file-button:hover,
 .settings-file-button:focus-within {
-  background: #1b2a5e;
+  background: var(--surface-2);
 }
 
 .settings-file-input {
@@ -61,17 +168,11 @@
   overflow: hidden;
 }
 
-.settings-hint {
-  font-size: 12px;
-  color: #9aa3d0;
-  margin-top: 6px;
-}
-
 .settings-fields {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
 }
 
 .settings-field {
@@ -79,19 +180,23 @@
   flex-direction: column;
   gap: 6px;
   font-size: 13px;
-  color: #9aa3d0;
-  flex: 1;
-  min-width: 220px;
+  color: var(--muted);
 }
 
 .settings-field input,
 .settings-field select {
-  padding: 10px;
-  background: #1b2a5e;
-  border: 1px solid #4a5ea8;
-  color: white;
-  font-family: inherit;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
   font-size: 15px;
+}
+
+.settings-field input:focus,
+.settings-field select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 0;
 }
 
 .settings-toggle-row {
@@ -100,12 +205,18 @@
   align-items: center;
   gap: 20px;
   padding: 14px 16px;
-  background: #1b2a5e;
-  margin-bottom: 30px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
 }
 
 .settings-toggle-title {
   font-size: 15px;
+  font-weight: 500;
+}
+
+.settings-toggle-row .settings-hint {
+  margin: 2px 0 0;
 }
 
 .settings-switch {
@@ -113,7 +224,7 @@
   height: 26px;
   border-radius: 13px;
   border: none;
-  background: #4a5078;
+  background: #3a4478;
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
@@ -121,7 +232,7 @@
 }
 
 .settings-switch.on {
-  background: #4a5ea8;
+  background: var(--accent);
 }
 
 .settings-switch-knob {
@@ -131,32 +242,46 @@
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  background: white;
+  background: #ffffff;
 }
 
 .settings-switch.on .settings-switch-knob {
   left: 23px;
 }
 
-.settings-buttons {
+.settings-footer {
   display: flex;
-  gap: 14px;
-  margin-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-top: 28px;
 }
 
-.settings-save,
-.settings-logout {
-  font-family: inherit;
-  font-size: 15px;
-  padding: 11px 28px;
-  cursor: pointer;
-  border: 1px solid #4a5ea8;
+.settings-messages {
+  font-size: 14px;
+}
+
+.settings-error {
+  color: var(--danger);
+}
+
+.settings-ok {
+  color: var(--ok);
 }
 
 .settings-save {
-  background: white;
-  color: #111936;
-  border-color: white;
+  padding: 10px 24px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--bg);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.settings-save:hover {
+  background: #9cc4ff;
 }
 
 .settings-save:disabled {
@@ -164,17 +289,12 @@
   cursor: default;
 }
 
-.settings-logout {
-  background: transparent;
-  color: white;
-}
+@media (max-width: 800px) {
+  .settings-page {
+    grid-template-columns: 1fr;
+  }
 
-.settings-logout:hover {
-  background: #1b2a5e;
-}
-
-.settings-ok {
-  color: #9be8a8;
-  font-size: 14px;
-  margin-top: 10px;
+  .settings-fields {
+    grid-template-columns: 1fr;
+  }
 }

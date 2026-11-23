@@ -1,7 +1,8 @@
 .action-panel {
-  background: #6b6b6b;
-  padding: 15px;
-  align-self: start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
 }
 
 .action-buttons {
@@ -11,55 +12,29 @@
 }
 
 .action-button {
-  background: transparent;
-  border: 1px solid transparent;
-  color: white;
-  font-family: inherit;
-  font-size: 12px;
-  cursor: pointer;
-  padding: 8px 4px;
-  opacity: 0.6;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
+  padding: 10px 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--muted);
+  font-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.action-button:hover {
+  border-color: #4a5ea8;
+  color: var(--text);
 }
 
 .action-button.on {
-  opacity: 1;
-  border-color: white;
-}
-
-.action-icon {
-  font-size: 28px;
-}
-
-.action-stars {
-  display: flex;
-  justify-content: center;
-  margin-top: 15px;
-}
-
-.rate-star {
-  background: transparent;
-  border: none;
-  color: #b0b0b0;
-  font-size: 32px;
-  cursor: pointer;
-  padding: 0 2px;
-}
-
-.rate-star.on {
-  color: white;
-}
-
-.action-label {
-  text-align: center;
-  font-size: 12px;
-  margin-top: 8px;
-}
-.action-icon {
-  filter: grayscale(1) brightness(0) invert(1);
+  border-color: var(--accent);
+  background: var(--surface-2);
+  color: #ffffff;
 }
 
 .action-icon {
@@ -67,8 +42,44 @@
   align-items: center;
   justify-content: center;
   height: 44px;
+  filter: grayscale(1) brightness(0) invert(1);
+  opacity: 0.55;
+}
+
+.action-button.on .action-icon {
+  opacity: 1;
 }
 
 .action-wide {
   grid-column: 1 / -1;
+}
+
+.action-stars {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+.rate-star {
+  background: transparent;
+  border: none;
+  color: #4a5078;
+  font-size: 30px;
+  cursor: pointer;
+  padding: 0 2px;
+}
+
+.rate-star:hover {
+  color: #b9c3f0;
+}
+
+.rate-star.on {
+  color: #ffffff;
+}
+
+.action-label {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
 }
