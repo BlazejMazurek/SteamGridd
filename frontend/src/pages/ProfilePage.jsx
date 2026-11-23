@@ -4,6 +4,8 @@ import GameSection from '../components/GameSection'
 import RatingsHistogram from '../components/RatingsHistogram'
 import StarRating from '../components/StarRating'
 import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import './ProfilePage.css'
 
 const statuses = [
@@ -23,6 +25,8 @@ const libraryFilters = [
 function ProfilePage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { authFetch, logout } = useAuth()
+  const { showToast } = useToast()
   const [user, setUser] = useState(null)
   const [lists, setLists] = useState({})
   const [message, setMessage] = useState('Ładowanie...')
@@ -30,24 +34,22 @@ function ProfilePage() {
   const [libraryFilter, setLibraryFilter] = useState('all')
 
   useEffect(() => {
-    const token = localStorage.getItem('token')
+    setUser(null)
+    setLists({})
+    setMessage('Ładowanie...')
 
-    if (!id && !token) {
-      setMessage('login')
-      return
-    }
+    const request = id ? fetch(`${API_URL}/user/${id}`) : authFetch(`${API_URL}/user/me`)
 
-    const url = id ? `${API_URL}/user/${id}` : `${API_URL}/user/me`
-    const options = id ? {} : { headers: { Authorization: `Bearer ${token}` } }
-
-    fetch(url, options)
+    request
       .then((response) => {
         if (!response.ok) throw new Error('error')
         return response.json()
       })
       .then((data) => setUser(data))
-      .catch(() => setMessage(id ? 'Nie znaleziono użytkownika.' : 'login'))
-  }, [id])
+      .catch(() =>
+        setMessage(id ? 'Nie znaleziono użytkownika.' : 'Nie udało się pobrać profilu.')
+      )
+  }, [id, authFetch])
 
   useEffect(() => {
     if (!user) return
@@ -68,20 +70,15 @@ function ProfilePage() {
   }, [user])
 
   function handleLogout() {
-    localStorage.removeItem('token')
+    logout()
+    showToast('Wylogowano.', 'info')
     navigate('/')
   }
 
   if (!user) {
     return (
       <main className="profile-page">
-        {message === 'login' ? (
-          <p>
-            Zaloguj się, aby zobaczyć profil. <Link to="/logowanie">Przejdź do logowania</Link>
-          </p>
-        ) : (
-          <p>{message}</p>
-        )}
+        <p>{message}</p>
       </main>
     )
   }

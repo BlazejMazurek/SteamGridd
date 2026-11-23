@@ -81,7 +81,7 @@
   border: none;
   border-radius: var(--radius-sm);
   background: transparent;
-  color: #b9c3f0;
+  color: var(--text-soft);
   font-size: 14px;
   text-decoration: none;
   text-align: left;
@@ -94,7 +94,8 @@
 
 .settings-nav-item.active {
   background: var(--surface-3);
-  color: #ffffff;
+  color: var(--text);
+  font-weight: 600;
 }
 
 .settings-nav-item.danger {
@@ -149,7 +150,7 @@
 .settings-file-button {
   display: inline-block;
   padding: 8px 16px;
-  border: 1px solid #4a5ea8;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   font-size: 14px;
   cursor: pointer;
@@ -193,12 +194,6 @@
   font-size: 15px;
 }
 
-.settings-field input:focus,
-.settings-field select:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 0;
-}
-
 .settings-toggle-row {
   display: flex;
   justify-content: space-between;
@@ -224,7 +219,7 @@
   height: 26px;
   border-radius: 13px;
   border: none;
-  background: #3a4478;
+  background: var(--border-strong);
   position: relative;
   cursor: pointer;
   flex-shrink: 0;
@@ -274,14 +269,14 @@
   border: none;
   border-radius: var(--radius-sm);
   background: var(--accent);
-  color: var(--bg);
+  color: var(--on-accent);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .settings-save:hover {
-  background: #9cc4ff;
+  background: var(--accent-hover);
 }
 
 .settings-save:disabled {
@@ -296,5 +291,17 @@
 
   .settings-fields {
     grid-template-columns: 1fr;
+  }
+
+  .settings-main {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .settings-page {
+    margin: 20px auto;
+    padding: 0 14px;
+    gap: 16px;
   }
 }

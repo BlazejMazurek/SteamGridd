@@ -1,7 +1,7 @@
 .footer {
   margin-top: auto;
   border-top: 1px solid var(--border);
-  background: #111a40;
+  background: var(--header-bg);
 }
 
 .footer-inner {

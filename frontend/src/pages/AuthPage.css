@@ -36,23 +36,19 @@
   font-size: 15px;
 }
 
-.auth-page input:focus {
-  outline: 2px solid var(--accent);
-}
-
 .auth-page button {
   padding: 12px;
   background: var(--accent);
   border: none;
   border-radius: var(--radius-sm);
-  color: var(--bg);
+  color: var(--on-accent);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .auth-page button:hover {
-  background: #9cc4ff;
+  background: var(--accent-hover);
 }
 
 .auth-page p {
@@ -68,4 +64,11 @@
 .auth-error {
   color: var(--danger);
   font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    margin: 24px 16px;
+    padding: 22px;
+  }
 }

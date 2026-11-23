@@ -5,7 +5,7 @@
 }
 
 .stars-empty {
-  color: #4a5078;
+  color: var(--star-empty);
 }
 
 .stars-full {
@@ -14,5 +14,5 @@
   left: 0;
   overflow: hidden;
   white-space: nowrap;
-  color: white;
+  color: var(--star-full);
 }

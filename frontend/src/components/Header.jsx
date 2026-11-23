@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
-import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
+import { useTheme } from '../context/ThemeContext'
 import './Header.css'
 
 function navClass({ isActive }) {
@@ -9,21 +10,13 @@ function navClass({ isActive }) {
 
 function Header() {
   const location = useLocation()
-  const token = localStorage.getItem('token')
-  const [avatar, setAvatar] = useState('')
+  const { isLoggedIn, currentUser } = useAuth()
+  const { theme, toggleTheme } = useTheme()
+  const [open, setOpen] = useState(false)
 
   useEffect(() => {
-    if (!token) {
-      setAvatar('')
-      return
-    }
-    fetch(`${API_URL}/user/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-      .then((response) => (response.ok ? response.json() : null))
-      .then((data) => setAvatar(data && data.avatarUrl ? data.avatarUrl : ''))
-      .catch(() => setAvatar(''))
-  }, [token, location.pathname])
+    setOpen(false)
+  }, [location.pathname])
 
   return (
     <header className="header">
@@ -32,8 +25,20 @@ function Header() {
           Steam<span>Gridd</span>
         </Link>
 
-        <nav className="header-menu">
-          {token ? (
+        <button
+          type="button"
+          className="header-burger"
+          aria-label="Menu"
+          aria-expanded={open}
+          onClick={() => setOpen(!open)}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav className={open ? 'header-menu open' : 'header-menu'}>
+          {isLoggedIn ? (
             <>
               <NavLink to="/profil" className={navClass}>Konto</NavLink>
               <NavLink to="/ustawienia" className={navClass}>Ustawienia</NavLink>
@@ -44,9 +49,47 @@ function Header() {
           <NavLink to="/gry" className={navClass}>Gry</NavLink>
           <NavLink to="/uzytkownicy" className={navClass}>Użytkownicy</NavLink>
 
-          {token && (
+          <button
+            type="button"
+            className="header-theme"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Włącz jasny motyw' : 'Włącz ciemny motyw'}
+            title={theme === 'dark' ? 'Jasny motyw' : 'Ciemny motyw'}
+          >
+            {theme === 'dark' ? (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="4" />
+                <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+              </svg>
+            ) : (
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+              </svg>
+            )}
+          </button>
+
+          {isLoggedIn && (
             <Link to="/profil" className="header-avatar" aria-label="Mój profil">
-              {avatar && <img src={avatar} alt="" />}
+              {currentUser && currentUser.avatarUrl && <img src={currentUser.avatarUrl} alt="" />}
             </Link>
           )}
         </nav>

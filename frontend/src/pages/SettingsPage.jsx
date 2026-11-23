@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import './SettingsPage.css'
 
 function SettingsPage() {
   const navigate = useNavigate()
-  const token = localStorage.getItem('token')
+  const { authFetch, logout, refreshUser } = useAuth()
+  const { showToast } = useToast()
 
   const [user, setUser] = useState(null)
   const [queueCount, setQueueCount] = useState(0)
@@ -18,16 +21,11 @@ function SettingsPage() {
   const [remember18, setRemember18] = useState(
     localStorage.getItem('ageConfirmed') === 'yes'
   )
-  const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    if (!token) return
-
-    fetch(`${API_URL}/user/me`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
+    authFetch(`${API_URL}/user/me`)
       .then((response) => {
         if (!response.ok) throw new Error('error')
         return response.json()
@@ -44,7 +42,9 @@ function SettingsPage() {
           .catch(() => {})
       })
       .catch(() => setError('Nie udało się pobrać danych konta.'))
+  }, [authFetch])
 
+  useEffect(() => {
     fetch(API_URL)
       .then((response) => response.json())
       .then((data) => {
@@ -72,7 +72,7 @@ function SettingsPage() {
           })
           .catch(() => {})
       })
-  }, [token])
+  }, [])
 
   function handleFile(e) {
     const chosen = e.target.files[0]
@@ -94,7 +94,6 @@ function SettingsPage() {
 
   async function handleSave(e) {
     e.preventDefault()
-    setMessage('')
     setError('')
 
     if (username.trim() === '') {
@@ -109,9 +108,8 @@ function SettingsPage() {
 
     setSaving(true)
     try {
-      const response = await fetch(`${API_URL}/user/me`, {
+      const response = await authFetch(`${API_URL}/user/me`, {
         method: 'PATCH',
-        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       })
       const data = await response.json()
@@ -131,7 +129,8 @@ function SettingsPage() {
       }
       setFile(null)
       setPreview('')
-      setMessage('Zapisano zmiany.')
+      showToast('Zapisano zmiany.', 'success')
+      refreshUser()
     } catch {
       setError('Nie udało się połączyć z serwerem.')
     }
@@ -139,18 +138,9 @@ function SettingsPage() {
   }
 
   function handleLogout() {
-    localStorage.removeItem('token')
+    logout()
+    showToast('Wylogowano.', 'info')
     navigate('/')
-  }
-
-  if (!token) {
-    return (
-      <main className="settings-page">
-        <p>
-          Zaloguj się, aby zmienić ustawienia. <Link to="/logowanie">Przejdź do logowania</Link>
-        </p>
-      </main>
-    )
   }
 
   if (!user && !error) {
@@ -273,7 +263,6 @@ function SettingsPage() {
         <div className="settings-footer">
           <div className="settings-messages">
             {error && <span className="settings-error">{error}</span>}
-            {message && <span className="settings-ok">{message}</span>}
           </div>
           <button type="submit" className="settings-save" disabled={saving}>
             {saving ? 'Zapisywanie...' : 'Zapisz zmiany'}

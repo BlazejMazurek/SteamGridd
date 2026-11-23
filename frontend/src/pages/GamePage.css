@@ -47,7 +47,7 @@
 .game-description {
   font-size: 15px;
   line-height: 1.6;
-  color: #cfd8ff;
+  color: var(--text-body);
   margin: 18px 0;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .game-average span:first-child {
-  color: var(--accent);
+  color: var(--star-full);
 }
 
 .game-comments-title {
@@ -120,7 +120,7 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 6px 0 0;
-  color: #cfd8ff;
+  color: var(--text-body);
 }
 
 .comment-form {
@@ -138,11 +138,6 @@
   color: var(--text);
   font-size: 14px;
   resize: vertical;
-}
-
-.comment-form textarea:focus,
-.comment-form select:focus {
-  outline: 2px solid var(--accent);
 }
 
 .comment-form-row {
@@ -171,14 +166,89 @@
   background: var(--accent);
   border: none;
   border-radius: var(--radius-sm);
-  color: var(--bg);
+  color: var(--on-accent);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 }
 
 .comment-form button:hover {
-  background: #9cc4ff;
+  background: var(--accent-hover);
+}
+
+.game-similar {
+  grid-column: 1 / -1;
+  margin-top: 12px;
+}
+
+.comment-file {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.comment-form .comment-file-button {
+  display: inline-block;
+  padding: 7px 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.comment-form .comment-file-button:hover,
+.comment-form .comment-file-button:focus-within {
+  background: var(--surface-2);
+}
+
+.comment-file-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  overflow: hidden;
+}
+
+.comment-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.comment-preview img {
+  height: 56px;
+  width: auto;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.comment-form .comment-preview button {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  color: var(--text);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.comment-form .comment-preview button:hover {
+  background: var(--surface-2);
+}
+
+.comment-image-link {
+  display: block;
+  margin-top: 10px;
+}
+
+.comment-image {
+  display: block;
+  max-width: 100%;
+  max-height: 260px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
 }
 
 .game-page.blurred {
@@ -235,7 +305,7 @@
 
 .age-gate-yes {
   background: var(--accent);
-  color: var(--bg);
+  color: var(--on-accent);
 }
 
 .age-gate-no {
@@ -256,9 +326,85 @@
 @media (max-width: 700px) {
   .game-page {
     grid-template-columns: 1fr;
+    margin: 16px auto;
+    padding: 0 14px;
+    gap: 14px;
   }
 
   .game-cover {
-    max-width: 240px;
+    order: 1;
+    width: 150px;
+    margin: 0 auto;
+  }
+
+  .action-panel {
+    order: 2;
+    grid-column: auto;
+  }
+
+  .game-info {
+    order: 3;
+    padding: 16px;
+  }
+
+  .game-similar {
+    order: 4;
+    margin-top: 4px;
+  }
+
+  .game-title-row {
+    gap: 4px 12px;
+    padding-bottom: 10px;
+  }
+
+  .game-title-row h1 {
+    width: 100%;
+    font-size: 22px;
+  }
+
+  .game-description {
+    font-size: 14px;
+    margin: 12px 0;
+  }
+
+  .game-subtitle {
+    margin: 16px 0 6px;
+  }
+
+  .game-average {
+    font-size: 26px;
+  }
+
+  
+  .game-comments-title {
+    margin: 22px 0 12px;
+    padding-top: 14px;
+  }
+
+  .comment {
+    padding: 10px;
+    gap: 10px;
+  }
+
+  .comment-avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .age-gate-box {
+    padding: 32px 24px;
+  }
+
+  .age-gate-box h1 {
+    font-size: 34px;
+  }
+
+  .age-gate-box p {
+    font-size: 18px;
+  }
+
+  .age-gate-buttons button {
+    padding: 10px 32px;
+    font-size: 16px;
   }
 }

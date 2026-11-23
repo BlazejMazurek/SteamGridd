@@ -7,13 +7,14 @@ import './GamesPage.css'
 const PAGE_SIZE = 60
 
 function GamesPage() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [games, setGames] = useState([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(searchParams.get('szukaj') || '')
   const [publisherText, setPublisherText] = useState('')
   const [open, setOpen] = useState(false)
   const [limit, setLimit] = useState(PAGE_SIZE)
-  const [searchParams, setSearchParams] = useSearchParams()
 
   const genreId = searchParams.get('gatunek') || ''
   const publisherId = searchParams.get('wydawca') || ''
@@ -23,6 +24,7 @@ function GamesPage() {
       .then((response) => response.json())
       .then((data) => setGames(Array.isArray(data) ? data : []))
       .catch(() => setError('Nie udało się pobrać gier. Czy serwer działa?'))
+      .finally(() => setLoading(false))
   }, [])
 
   const genres = useMemo(() => {
@@ -162,9 +164,15 @@ function GamesPage() {
 
       {error && <p>{error}</p>}
 
-      {!error && <div className="games-count">Wyniki: {filtered.length}</div>}
+      {!error && !loading && <div className="games-count">Wyniki: {filtered.length}</div>}
 
-      {!error && filtered.length === 0 ? (
+      {loading ? (
+        <div className="games-grid">
+          {Array.from({ length: 10 }).map((_, index) => (
+            <div key={index} className="skeleton skeleton-card" aria-hidden="true"></div>
+          ))}
+        </div>
+      ) : !error && filtered.length === 0 ? (
         <p>Nie znaleziono gier.</p>
       ) : (
         <div className="games-grid">

@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import './AuthPage.css'
 
 function LoginPage() {
+  const { login } = useAuth()
+  const { showToast } = useToast()
+  const navigate = useNavigate()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const navigate = useNavigate()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -23,7 +27,8 @@ function LoginPage() {
         setError(data.error || 'Błąd logowania')
         return
       }
-      localStorage.setItem('token', data.token)
+      login(data.token)
+      showToast('Zalogowano pomyślnie.', 'success')
       navigate('/profil')
     } catch {
       setError('Nie udało się połączyć z serwerem.')

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
 import './ActionPanel.css'
 
 const actions = [
@@ -10,26 +11,29 @@ const actions = [
 ]
 
 function ActionPanel({ appId }) {
+  const { token, authFetch } = useAuth()
   const [status, setStatus] = useState({})
   const [favorite, setFavorite] = useState(false)
   const [rating, setRating] = useState(0)
   const [message, setMessage] = useState('')
-  const token = localStorage.getItem('token')
 
   useEffect(() => {
-    if (!token) return
-    const headers = { Authorization: `Bearer ${token}` }
+    if (!token) {
+      setStatus({})
+      setFavorite(false)
+      return
+    }
 
-    fetch(`${API_URL}/user/me/games/${appId}`, { headers })
+    authFetch(`${API_URL}/user/me/games/${appId}`)
       .then((response) => response.json())
       .then((data) => setStatus(data))
       .catch(() => {})
 
-    fetch(`${API_URL}/user/me/favorites/${appId}`, { headers })
+    authFetch(`${API_URL}/user/me/favorites/${appId}`)
       .then((response) => response.json())
       .then((data) => setFavorite(Boolean(data.isFavorite)))
       .catch(() => {})
-  }, [appId, token])
+  }, [appId, token, authFetch])
 
   async function toggle(key) {
     if (!token) {
@@ -39,12 +43,9 @@ function ActionPanel({ appId }) {
     const newValue = !status[key]
     setStatus({ ...status, [key]: newValue })
     try {
-      const response = await fetch(`${API_URL}/user/me/games/${appId}`, {
+      const response = await authFetch(`${API_URL}/user/me/games/${appId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ field: key, value: newValue }),
       })
       if (!response.ok) throw new Error('error')
@@ -62,12 +63,9 @@ function ActionPanel({ appId }) {
     }
     const newValue = !favorite
     try {
-      const response = await fetch(`${API_URL}/user/me/favorites/${appId}`, {
+      const response = await authFetch(`${API_URL}/user/me/favorites/${appId}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ value: newValue }),
       })
       const data = await response.json()

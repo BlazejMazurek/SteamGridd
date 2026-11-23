@@ -6,19 +6,32 @@ function GameSection({
   title,
   games,
   linkText,
+  linkTo = '/gry',
   columns = 5,
   scroll = false,
+  loading = false,
   emptyText = 'Brak gier.',
 }) {
+  const skeletonCount = scroll ? 4 : columns
+
   return (
     <section className="game-section">
       <div className="game-section-header">
         <h2>{title}</h2>
-        {linkText && <Link to="/gry">{linkText}</Link>}
+        {linkText && <Link to={linkTo}>{linkText}</Link>}
       </div>
 
-      {games.length === 0 ? (
-        <p style={{ color: '#9aa3d0', fontSize: '14px' }}>{emptyText}</p>
+      {loading ? (
+        <div
+          className="game-section-row"
+          style={{ gridTemplateColumns: `repeat(${skeletonCount}, 1fr)` }}
+        >
+          {Array.from({ length: skeletonCount }).map((_, index) => (
+            <div key={index} className="skeleton skeleton-card" aria-hidden="true"></div>
+          ))}
+        </div>
+      ) : games.length === 0 ? (
+        <p style={{ color: 'var(--muted)', fontSize: '14px' }}>{emptyText}</p>
       ) : (
         <div
           className={scroll ? 'game-section-row scroll' : 'game-section-row'}

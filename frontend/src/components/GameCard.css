@@ -63,3 +63,26 @@
 .game-card-rating {
   margin-top: 8px;
 }
+
+@media (max-width: 700px) {
+  .game-card {
+    border-radius: 8px;
+    font-size: 11px;
+  }
+
+  .game-card-badges {
+    top: 5px;
+    right: 5px;
+    gap: 3px;
+  }
+
+  .game-card-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 11px;
+  }
+
+  .game-card-rating {
+    margin-top: 5px;
+  }
+}

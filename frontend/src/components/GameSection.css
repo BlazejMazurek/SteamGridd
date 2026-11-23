@@ -37,7 +37,7 @@
   overflow-x: auto;
   padding-bottom: 12px;
   scrollbar-width: thin;
-  scrollbar-color: #4a5ea8 transparent;
+  scrollbar-color: var(--border-strong) transparent;
 }
 
 .game-section-row.scroll > * {
@@ -45,15 +45,29 @@
 }
 
 @media (max-width: 700px) {
+  .game-section {
+    margin-bottom: 26px;
+  }
+
+  .game-section-header {
+    margin-bottom: 12px;
+  }
+
+  .game-section-header h2 {
+    font-size: 16px;
+  }
+
   .game-section-row {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px;
   }
 
   .game-section-row.scroll {
     display: flex;
+    gap: 10px;
   }
 
   .game-section-row.scroll > * {
-    flex: 0 0 45%;
+    flex: 0 0 31%;
   }
 }

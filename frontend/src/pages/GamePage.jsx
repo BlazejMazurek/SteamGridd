@@ -1,8 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import StarRating from '../components/StarRating'
 import ActionPanel from '../components/ActionPanel'
+import GameSection from '../components/GameSection'
 import { API_URL } from '../api'
+import { useAuth } from '../context/AuthContext'
+import { useToast } from '../context/ToastContext'
 import './GamePage.css'
 
 const ratingOptions = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
@@ -10,16 +13,21 @@ const ratingOptions = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 function GamePage() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const { token, authFetch } = useAuth()
+  const { showToast } = useToast()
   const [game, setGame] = useState(null)
   const [reviews, setReviews] = useState([])
+  const [similarRaw, setSimilarRaw] = useState([])
   const [error, setError] = useState('')
   const [formError, setFormError] = useState('')
   const [text, setText] = useState('')
   const [rating, setRating] = useState('4')
+  const [imageFile, setImageFile] = useState(null)
+  const [imagePreview, setImagePreview] = useState('')
+  const [fileKey, setFileKey] = useState(0)
   const [ageConfirmed, setAgeConfirmed] = useState(
     localStorage.getItem('ageConfirmed') === 'yes'
   )
-  const token = localStorage.getItem('token')
 
   function loadReviews() {
     fetch(`${API_URL}/games/${id}/reviews`)
@@ -30,6 +38,10 @@ function GamePage() {
 
   useEffect(() => {
     setAgeConfirmed(localStorage.getItem('ageConfirmed') === 'yes')
+    setGame(null)
+    setError('')
+    setSimilarRaw([])
+
     fetch(`${API_URL}/games/steam/${id}`)
       .then((response) => {
         if (!response.ok) throw new Error('not found')
@@ -41,23 +53,69 @@ function GamePage() {
     loadReviews()
   }, [id])
 
+  useEffect(() => {
+    if (!game || !game.genres || game.genres.length === 0) return
+    fetch(`${API_URL}/games?genres=${game.genres[0].id}`)
+      .then((response) => response.json())
+      .then((data) => setSimilarRaw(Array.isArray(data) ? data : []))
+      .catch(() => setSimilarRaw([]))
+  }, [game])
+
+  const similar = useMemo(() => {
+    if (!game) return []
+    const genreIds = new Set((game.genres || []).map((genre) => genre.id))
+    return similarRaw
+      .filter((other) => other.id !== game.id && !other.isAdult && other.coverImage)
+      .map((other) => {
+        const shared = (other.genres || []).filter((genre) => genreIds.has(genre.id)).length
+        const samePublisher =
+          game.publisher && other.publisher && game.publisher.id === other.publisher.id
+        return { other, score: shared * 2 + (samePublisher ? 3 : 0) }
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6)
+      .map((item) => item.other)
+  }, [similarRaw, game])
+
+  function handleImage(e) {
+    const chosen = e.target.files[0]
+    if (!chosen) return
+
+    if (!chosen.type.startsWith('image/')) {
+      setFormError('Wybierz plik graficzny (JPG lub PNG).')
+      return
+    }
+    if (chosen.size > 5 * 1024 * 1024) {
+      setFormError('Zdjęcie jest za duże (maksymalnie 5 MB).')
+      return
+    }
+
+    setFormError('')
+    setImageFile(chosen)
+    setImagePreview(URL.createObjectURL(chosen))
+  }
+
+  function removeImage() {
+    setImageFile(null)
+    setImagePreview('')
+    setFileKey(fileKey + 1)
+  }
+
   async function handleSubmit(e) {
     e.preventDefault()
     setFormError('')
     if (text.trim() === '') return
 
+    const formData = new FormData()
+    formData.append('rating', rating)
+    formData.append('comment', text.trim())
+    formData.append('appId', id)
+    if (imageFile) formData.append('image', imageFile)
+
     try {
-      const response = await fetch(`${API_URL}/reviews`, {
+      const response = await authFetch(`${API_URL}/reviews`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          rating: Number(rating),
-          comment: text.trim(),
-          appId: Number(id),
-        }),
+        body: formData,
       })
       const data = await response.json()
       if (!response.ok) {
@@ -65,14 +123,30 @@ function GamePage() {
         return
       }
       setText('')
+      removeImage()
+      showToast('Komentarz został dodany.', 'success')
       loadReviews()
     } catch {
       setFormError('Nie udało się połączyć z serwerem.')
     }
   }
 
-  if (error) return <main className="game-page"><p>{error}</p></main>
-  if (!game) return <main className="game-page"><p>Ładowanie...</p></main>
+  if (error) {
+    return (
+      <main className="game-page">
+        <p>{error}</p>
+      </main>
+    )
+  }
+
+  if (!game) {
+    return (
+      <main className="game-page">
+        <div className="skeleton skeleton-card" aria-hidden="true"></div>
+        <div className="skeleton" style={{ height: 360 }} aria-hidden="true"></div>
+      </main>
+    )
+  }
 
   const locked = game.isAdult && !ageConfirmed
   const genreList = game.genres || []
@@ -153,6 +227,26 @@ function GamePage() {
                 placeholder="Napisz, co sądzisz o tej grze..."
                 rows={3}
               />
+
+              <div className="comment-file">
+                <label className="comment-file-button">
+                  Dodaj zdjęcie (opcjonalnie)
+                  <input
+                    key={fileKey}
+                    className="comment-file-input"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImage}
+                  />
+                </label>
+                {imagePreview && (
+                  <div className="comment-preview">
+                    <img src={imagePreview} alt="Podgląd zdjęcia" />
+                    <button type="button" onClick={removeImage}>Usuń</button>
+                  </div>
+                )}
+              </div>
+
               <div className="comment-form-row">
                 <label>
                   Ocena:
@@ -183,12 +277,32 @@ function GamePage() {
                   <StarRating value={Number(review.rating)} size={16} />
                 </div>
                 <p>{review.comment}</p>
+                {review.imageUrl && (
+                  <a
+                    href={review.imageUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="comment-image-link"
+                  >
+                    <img
+                      className="comment-image"
+                      src={review.imageUrl}
+                      alt="Zdjęcie dodane do komentarza"
+                    />
+                  </a>
+                )}
               </div>
             </div>
           ))}
         </div>
 
         <ActionPanel appId={id} />
+
+        {similar.length > 0 && (
+          <div className="game-similar">
+            <GameSection title="Podobne gry" games={similar} columns={6} />
+          </div>
+        )}
       </main>
     </>
   )

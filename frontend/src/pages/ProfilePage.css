@@ -57,7 +57,7 @@
   margin-left: auto;
   padding: 8px 18px;
   background: transparent;
-  border: 1px solid #4a5ea8;
+  border: 1px solid var(--border-strong);
   border-radius: var(--radius-sm);
   color: var(--text);
   font-size: 14px;
@@ -79,7 +79,7 @@
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
-  color: #b9c3f0;
+  color: var(--text-soft);
   font-size: 14px;
   padding: 8px 16px;
   cursor: pointer;
@@ -87,11 +87,13 @@
 
 .profile-tab:hover {
   background: var(--surface-2);
+  color: var(--text);
 }
 
 .profile-tab.active {
   background: var(--surface-3);
-  color: #ffffff;
+  color: var(--text);
+  font-weight: 600;
 }
 
 .profile-comment {
@@ -147,7 +149,7 @@
   font-size: 14px;
   line-height: 1.5;
   margin: 8px 0 0;
-  color: #cfd8ff;
+  color: var(--text-body);
 }
 
 .library-filters {
@@ -159,7 +161,7 @@
 
 .library-chip {
   background: transparent;
-  border: 1px solid #4a5ea8;
+  border: 1px solid var(--border-strong);
   border-radius: 999px;
   color: var(--text);
   font-size: 13px;
@@ -173,7 +175,7 @@
 
 .library-chip.active {
   background: var(--accent);
-  color: var(--bg);
+  color: var(--on-accent);
   border-color: var(--accent);
   font-weight: 600;
 }
@@ -181,5 +183,68 @@
 @media (max-width: 900px) {
   .profile-page {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-page {
+    margin: 20px auto;
+    padding: 0 14px;
+    gap: 16px;
+  }
+
+  .profile-main {
+    padding: 14px;
+  }
+
+  .profile-header {
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .profile-header h1 {
+    font-size: 20px;
+  }
+
+  .profile-header p {
+    font-size: 13px;
+  }
+
+  .logout-button {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+
+  .profile-tabs {
+    margin-bottom: 18px;
+  }
+
+  .profile-tab {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .profile-comment {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .profile-comment-cover {
+    width: 52px;
+  }
+
+  .profile-comment-head a {
+    font-size: 14px;
+  }
+
+  .profile-comment-body p {
+    font-size: 13px;
   }
 }
