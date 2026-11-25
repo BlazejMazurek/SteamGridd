@@ -8,8 +8,6 @@ import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import './GamePage.css'
 
-const ratingOptions = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
-
 function GamePage() {
   const { id } = useParams()
   const navigate = useNavigate()
@@ -21,10 +19,13 @@ function GamePage() {
   const [error, setError] = useState('')
   const [formError, setFormError] = useState('')
   const [text, setText] = useState('')
-  const [rating, setRating] = useState('4')
+  const [rating, setRating] = useState(0)
   const [imageFile, setImageFile] = useState(null)
   const [imagePreview, setImagePreview] = useState('')
   const [fileKey, setFileKey] = useState(0)
+  const [isSpoiler, setIsSpoiler] = useState(false)
+  const [hoverRating, setHoverRating] = useState(0)
+  const [revealed, setRevealed] = useState([])
   const [ageConfirmed, setAgeConfirmed] = useState(
     localStorage.getItem('ageConfirmed') === 'yes'
   )
@@ -95,6 +96,13 @@ function GamePage() {
     setImagePreview(URL.createObjectURL(chosen))
   }
 
+  function valueFromClick(e) {
+    const box = e.currentTarget.getBoundingClientRect()
+    const ratio = (e.clientX - box.left) / box.width
+    const value = Math.ceil(ratio * 10) / 2
+    return Math.min(5, Math.max(0.5, value))
+  }
+
   function removeImage() {
     setImageFile(null)
     setImagePreview('')
@@ -105,11 +113,16 @@ function GamePage() {
     e.preventDefault()
     setFormError('')
     if (text.trim() === '') return
+    if (rating === 0) {
+      setFormError('Wybierz ocenę (gwiazdki).')
+      return
+    }
 
     const formData = new FormData()
     formData.append('rating', rating)
     formData.append('comment', text.trim())
     formData.append('appId', id)
+    formData.append('isSpoiler', isSpoiler ? 'true' : 'false')
     if (imageFile) formData.append('image', imageFile)
 
     try {
@@ -123,6 +136,8 @@ function GamePage() {
         return
       }
       setText('')
+      setIsSpoiler(false)
+      setRating(0)
       removeImage()
       showToast('Komentarz został dodany.', 'success')
       loadReviews()
@@ -247,15 +262,37 @@ function GamePage() {
                 )}
               </div>
 
+              <label className="comment-spoiler-check">
+                <input
+                  type="checkbox"
+                  checked={isSpoiler}
+                  onChange={(e) => setIsSpoiler(e.target.checked)}
+                />
+                Zawiera spoilery
+              </label>
+
               <div className="comment-form-row">
-                <label>
-                  Ocena:
-                  <select value={rating} onChange={(e) => setRating(e.target.value)}>
-                    {ratingOptions.map((n) => (
-                      <option key={n} value={n}>{n}</option>
-                    ))}
-                  </select>
-                </label>
+                <div className="comment-stars">
+                  <div
+                    className="comment-stars-pick"
+                    onMouseMove={(e) => setHoverRating(valueFromClick(e))}
+                    onMouseLeave={() => setHoverRating(0)}
+                    onClick={(e) => {
+                      const value = valueFromClick(e)
+                      setRating(value === rating ? 0 : value)
+                    }}
+                    role="slider"
+                    aria-label="Ocena"
+                    aria-valuemin={0}
+                    aria-valuemax={5}
+                    aria-valuenow={rating}
+                  >
+                    <StarRating value={hoverRating || rating} size={30} />
+                  </div>
+                  <span className="comment-stars-label">
+                    {rating === 0 ? 'Dodaj ocenę' : `Twoja ocena: ${rating}`}
+                  </span>
+                </div>
                 <button type="submit">Dodaj</button>
               </div>
               {formError && <div className="auth-error">{formError}</div>}
@@ -268,32 +305,46 @@ function GamePage() {
 
           <h2 className="game-comments-title">Ostatnie komentarze:</h2>
           {reviews.length === 0 && <p>Brak komentarzy. Bądź pierwszy!</p>}
-          {reviews.map((review) => (
-            <div className="comment" key={review.id}>
-              <div className="comment-avatar"></div>
-              <div className="comment-body">
-                <div className="comment-head">
-                  <span>{review.user ? review.user.username : 'użytkownik'}</span>
-                  <StarRating value={Number(review.rating)} size={16} />
+          {reviews.map((review) => {
+            const hidden = review.isSpoiler && !revealed.includes(review.id)
+            return (
+              <div className="comment" key={review.id}>
+                <div className="comment-avatar"></div>
+                <div className="comment-body">
+                  <div className="comment-head">
+                    <span>{review.user ? review.user.username : 'użytkownik'}</span>
+                    <StarRating value={Number(review.rating)} size={16} />
+                  </div>
+                  <div className={hidden ? 'comment-content spoiler-hidden' : 'comment-content'}>
+                    <p>{review.comment}</p>
+                    {review.imageUrl && (
+                      <a
+                        href={review.imageUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="comment-image-link"
+                      >
+                        <img
+                          className="comment-image"
+                          src={review.imageUrl}
+                          alt="Zdjęcie dodane do komentarza"
+                        />
+                      </a>
+                    )}
+                  </div>
+                  {hidden && (
+                    <button
+                      type="button"
+                      className="spoiler-button"
+                      onClick={() => setRevealed([...revealed, review.id])}
+                    >
+                      Uwaga spoiler – kliknij, aby odkryć
+                    </button>
+                  )}
                 </div>
-                <p>{review.comment}</p>
-                {review.imageUrl && (
-                  <a
-                    href={review.imageUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="comment-image-link"
-                  >
-                    <img
-                      className="comment-image"
-                      src={review.imageUrl}
-                      alt="Zdjęcie dodane do komentarza"
-                    />
-                  </a>
-                )}
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
 
         <ActionPanel appId={id} />

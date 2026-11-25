@@ -14,7 +14,6 @@ function ActionPanel({ appId }) {
   const { token, authFetch } = useAuth()
   const [status, setStatus] = useState({})
   const [favorite, setFavorite] = useState(false)
-  const [rating, setRating] = useState(0)
   const [message, setMessage] = useState('')
 
   useEffect(() => {
@@ -80,10 +79,6 @@ function ActionPanel({ appId }) {
     }
   }
 
-  function rate(n) {
-    setRating(n === rating ? 0 : n)
-  }
-
   return (
     <aside className="action-panel">
       <div className="action-buttons">
@@ -109,21 +104,7 @@ function ActionPanel({ appId }) {
         </button>
       </div>
 
-      <div className="action-stars">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <button
-            key={n}
-            className={n <= rating ? 'rate-star on' : 'rate-star'}
-            onClick={() => rate(n)}
-          >
-            ★
-          </button>
-        ))}
-      </div>
-
-      <div className="action-label">
-        {message || (rating === 0 ? 'Dodaj ocenę' : `Twoja ocena: ${rating}`)}
-      </div>
+      {message && <div className="action-label">{message}</div>}
     </aside>
   )
 }
