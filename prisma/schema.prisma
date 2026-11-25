@@ -75,6 +75,7 @@ model Review {
   rating      Float
   comment     String?
   imageUrl    String?
+  isSpoiler   Boolean  @default(false)
   createdAt   DateTime @default(now())
 
   userId      Int

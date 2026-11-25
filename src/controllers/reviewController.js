@@ -3,14 +3,23 @@ import sharp from 'sharp';
 import path from 'path';
 import fs from 'fs';
 
+const parseBoolean = (value) => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'string') {
+        return value.toLowerCase() === 'true' || value === '1';
+    }
+    return Boolean(value);
+};
+
 export const createReview = async (req, res) => {
     try {
-        const { rating, comment, appId } = req.body;
+        const { rating, comment, appId, isSpoiler } = req.body;
         const userId = req.user.userId;
         const numRating = Number(rating);
+        const spoilerFlag = parseBoolean(isSpoiler);
 
         if (isNaN(numRating) || numRating < 0.5 || numRating > 5.0 || (numRating * 2) % 1 !== 0) {
-            return res.status(400).json({ error: 'Ocena musi być w przedziale od 0.5 do 5.0'});
+            return res.status(400).json({ error: 'Ocena musi być w przedziale od 0.5 do 5.0' });
         }
 
         if (!appId) {
@@ -41,7 +50,7 @@ export const createReview = async (req, res) => {
         if (req.file) {
             const uploadDir = path.resolve('uploads');
             if (!fs.existsSync(uploadDir)) {
-                fs.existsSync(uploadDir) || fs.mkdirSync(uploadDir, { recursive: true });
+                fs.mkdirSync(uploadDir, { recursive: true });
             }
 
             const filename = `review-${userId}-${Date.now()}.webp`;
@@ -58,19 +67,20 @@ export const createReview = async (req, res) => {
 
         const newReview = await prisma.review.create({
             data: {
-                rating: Number(rating),
+                rating: numRating,
                 comment,
+                isSpoiler: spoilerFlag,
                 imageUrl,
                 user: {
-                    connect: {id: Number(userId)}
+                    connect: { id: Number(userId) }
                 },
                 game: {
-                    connect: {appId: Number(appId)} 
+                    connect: { appId: Number(appId) }
                 }
             },
             include: {
                 user: {
-                    select: { username: true } 
+                    select: { username: true }
                 },
                 game: true
             }
