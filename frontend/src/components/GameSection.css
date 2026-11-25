@@ -1,0 +1,73 @@
+.game-section {
+  margin-bottom: 40px;
+}
+
+.game-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+
+.game-section-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.game-section-header a {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.game-section-header a:hover {
+  text-decoration: underline;
+}
+
+.game-section-row {
+  display: grid;
+  gap: 20px;
+}
+
+.game-section-row.scroll {
+  display: flex;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+.game-section-row.scroll > * {
+  flex: 0 0 calc((100% - 60px) / 4);
+}
+
+@media (max-width: 700px) {
+  .game-section {
+    margin-bottom: 26px;
+  }
+
+  .game-section-header {
+    margin-bottom: 12px;
+  }
+
+  .game-section-header h2 {
+    font-size: 16px;
+  }
+
+  .game-section-row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 10px;
+  }
+
+  .game-section-row.scroll {
+    display: flex;
+    gap: 10px;
+  }
+
+  .game-section-row.scroll > * {
+    flex: 0 0 31%;
+  }
+}

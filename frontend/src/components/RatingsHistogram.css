@@ -1,0 +1,49 @@
+.histogram {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.histogram h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.histogram-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  min-height: 110px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.histogram-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.histogram-bar {
+  width: 100%;
+  min-height: 2px;
+  background: var(--accent);
+  border-radius: 3px 3px 0 0;
+}
+
+.histogram-value,
+.histogram-count {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.histogram-value {
+  color: var(--text);
+}
+
+.histogram-count {
+  color: var(--muted);
+}

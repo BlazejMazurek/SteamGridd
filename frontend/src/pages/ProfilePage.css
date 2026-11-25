@@ -1,0 +1,250 @@
+.profile-page {
+  max-width: 1200px;
+  margin: 32px auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.profile-main {
+  min-width: 0;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #4a5ea8;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-header h1 {
+  margin: 0 0 4px;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.profile-header p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.logout-button {
+  margin-left: auto;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background: var(--surface-2);
+}
+
+.profile-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+}
+
+.profile-tab {
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--text-soft);
+  font-size: 14px;
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.profile-tab:hover {
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.profile-tab.active {
+  background: var(--surface-3);
+  color: var(--text);
+  font-weight: 600;
+}
+
+.profile-comment {
+  display: flex;
+  gap: 16px;
+  padding: 14px;
+  margin-bottom: 14px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+
+.profile-comment-cover {
+  width: 70px;
+  flex-shrink: 0;
+  aspect-ratio: 3 / 4;
+  background: var(--surface-2);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.profile-comment-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-comment-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-comment-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.profile-comment-head a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.profile-comment-head a:hover {
+  color: var(--accent);
+}
+
+.profile-comment-body p {
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 8px 0 0;
+  color: var(--text-body);
+}
+
+.library-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.library-chip {
+  background: transparent;
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  color: var(--text);
+  font-size: 13px;
+  padding: 6px 16px;
+  cursor: pointer;
+}
+
+.library-chip:hover {
+  background: var(--surface-2);
+}
+
+.library-chip.active {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .profile-page {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .profile-page {
+    margin: 20px auto;
+    padding: 0 14px;
+    gap: 16px;
+  }
+
+  .profile-main {
+    padding: 14px;
+  }
+
+  .profile-header {
+    gap: 14px;
+    margin-bottom: 16px;
+    padding-bottom: 14px;
+    flex-wrap: wrap;
+  }
+
+  .profile-avatar {
+    width: 64px;
+    height: 64px;
+  }
+
+  .profile-header h1 {
+    font-size: 20px;
+  }
+
+  .profile-header p {
+    font-size: 13px;
+  }
+
+  .logout-button {
+    padding: 6px 14px;
+    font-size: 13px;
+  }
+
+  .profile-tabs {
+    margin-bottom: 18px;
+  }
+
+  .profile-tab {
+    font-size: 13px;
+    padding: 6px 12px;
+  }
+
+  .profile-comment {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .profile-comment-cover {
+    width: 52px;
+  }
+
+  .profile-comment-head a {
+    font-size: 14px;
+  }
+
+  .profile-comment-body p {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,74 @@
+.auth-page {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 32px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.auth-page h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 0 22px;
+}
+
+.auth-page form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-page label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.auth-page input {
+  padding: 11px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 15px;
+}
+
+.auth-page button {
+  padding: 12px;
+  background: var(--accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--on-accent);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.auth-page button:hover {
+  background: var(--accent-hover);
+}
+
+.auth-page p {
+  font-size: 14px;
+  color: var(--muted);
+  margin: 20px 0 0;
+}
+
+.auth-page a {
+  color: var(--accent);
+}
+
+.auth-error {
+  color: var(--danger);
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .auth-page {
+    margin: 24px 16px;
+    padding: 22px;
+  }
+}
