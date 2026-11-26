@@ -1,108 +1,100 @@
 import { PrismaClient } from '@prisma/client';
-import axios from 'axios';
 
 const prisma = new PrismaClient();
 
-async function fetchWithRetry(url, retries = 5, delay = 3000) {
-    for (let i = 0; i < retries; i++) {
-        try {
-            return await axios.get(url);
-        } catch (err) {
-            if (err.response && err.response.status === 429 && i < retries - 1) {
-                console.log(`Limit żądań (429) dla ${url}. Czekam ${delay}ms przed ponowieniem...`);
-                await new Promise(res => setTimeout(res, delay));
-                delay *= 2;
-            } else {
-                throw err;
-            }
-        }
-    }
-}
+// Czysta lista kategorii bez duplikatów obcojęzycznych
+const ALLOWED_GENRES = new Set([
+    'Action',
+    'Casual',
+    'Indie',
+    'Free To Play',
+    'Adventure',
+    'Animation & Modeling',
+    'Video Production',
+    'RPG',
+    'Strategy',
+    'Simulation',
+    'Massively Multiplayer',
+    'Racing',
+    'Early Access',
+    'Sports',
+    'Violent',
+    'Design & Illustration',
+    'Game Development',
+    'Photo Editing',
+    'Utilities',
+    'Audio Production',
+    'Software Training',
+    'Nudity',
+    'Web Publishing',
+    'Gore',
+    'Education',
+    'Movie',
+    'Sexual Content',
+    'Accounting'
+]);
+
+// Kategorie, które oznaczają grę jako 18+
+const ADULT_GENRES = new Set([
+    'Violent',
+    'Nudity',
+    'Gore',
+    'Sexual Content'
+]);
 
 async function main() {
-    const appIdsToFetch = [
-        461040, // np. Pico Park
-    ];
+    // Najpierw upewniamy się, że wszystkie dozwolone kategorie istnieją w bazie
+    for (const name of ALLOWED_GENRES) {
+        await prisma.genre.upsert({
+            where: { name },
+            update: {},
+            create: { name }
+        });
+    }
 
-    console.log(`Rozpoczynam pobieranie i instalowanie ${appIdsToFetch.length} gier do bazy...`);
+    const dbGenres = await prisma.genre.findMany({
+        where: { name: { in: Array.from(ALLOWED_GENRES) } }
+    });
+    const genreByName = new Map(dbGenres.map(g => [g.name, g]));
 
-    let successCount = 0;
+    const games = await prisma.game.findMany({
+        include: { genres: true }
+    });
 
-    for (let i = 0; i < appIdsToFetch.length; i++) {
-        const appId = appIdsToFetch[i];
+    console.log(`Sprawdzam ${games.length} gier...`);
 
-        try {
-            const detailsRes = await fetchWithRetry(`https://store.steampowered.com/api/appdetails?appids=${appId}`);
-            const appData = detailsRes.data[appId.toString()];
+    let updatedCount = 0;
+    let adultCount = 0;
 
-            if (appData && appData.success && appData.data) {
-                const data = appData.data;
+    for (const game of games) {
+        // Zostawiamy tylko kategorie z dozwolonej listy
+        const filteredGenres = game.genres.filter(g => ALLOWED_GENRES.has(g.name));
 
-                if (data.type !== 'game') continue;
+        // Sprawdzamy, czy gra ma jakąkolwiek kategorię 18+
+        const hasAdultGenre = filteredGenres.some(g => ADULT_GENRES.has(g.name));
 
-                const title = data.name;
-                const description = data.short_description || null;
-                const releaseDate = data.release_date && data.release_date.date ? data.release_date.date : null;
-
-                let coverImage = `https://cdn.cloudflare.steamstatic.com/steam/apps/${appId}/library_600x900.jpg`;
-                try {
-                    await axios.head(coverImage);
-                } catch {
-                    coverImage = data.header_image || null;
+        await prisma.game.update({
+            where: { id: game.id },
+            data: {
+                isAdultOnly: hasAdultGenre,
+                genres: {
+                    set: filteredGenres.map(g => ({ id: g.id }))
                 }
-
-                const developerName = data.developers && data.developers.length > 0 ? data.developers[0] : null;
-                const publisherName = data.publishers && data.publishers.length > 0 ? data.publishers[0] : null;
-                const genresList = data.genres || [];
-
-                const gameData = {
-                    appId,
-                    title,
-                    description,
-                    releaseDate,
-                    coverImage,
-                    developer: developerName ? {
-                        connectOrCreate: {
-                            where: { name: developerName },
-                            create: { name: developerName }
-                        }
-                    } : undefined,
-                    publisher: publisherName ? {
-                        connectOrCreate: {
-                        where: { name: publisherName },
-                        create: { name: publisherName }
-                    }
-                    } : undefined,
-                    genres: {
-                        connectOrCreate: genresList.map(g => ({
-                            where: { name: g.description },
-                            create: { name: g.description }
-                        }))
-                    }
-                };
-
-            await prisma.game.upsert({
-                where: { appId },
-                update: gameData,
-                create: gameData
-            });
-
-                console.log(`[${i + 1}/${appIdsToFetch.length}] Zainstalowano / dodano grę: ${title} (AppID: ${appId})`);
-                successCount++;
             }
+        });
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
-        } catch (detailError) {
-            console.error(`Błąd przy AppID ${appId}:`, detailError.message);
+        updatedCount++;
+        if (hasAdultGenre) {
+            adultCount++;
         }
     }
 
-    console.log(`Zakończono! Pomyślnie przetworzono i zainstalowano ${successCount} gier.`);
+    console.log(`Zaktualizowano ${updatedCount} gier. Oznaczono jako 18+: ${adultCount}.`);
 }
 
 main()
-    .catch((e) => {
-        console.error(e);
+    .catch((err) => {
+        console.error('Błąd podczas aktualizacji gier:', err);
         process.exit(1);
     })
     .finally(async () => {
