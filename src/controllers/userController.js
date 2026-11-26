@@ -335,7 +335,7 @@ export const setFavorite = async (req, res) => {
                 data: { favoriteGames: { disconnect: { id: game.id } } }
 
             });
-
+            
         }
  
         res.status(200).json({ isFavorite: value });

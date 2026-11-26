@@ -1,4 +1,5 @@
 import prisma from '../config/db.js';
+
 const FIELDS = ['isPlayed', 'isCompleted', 'isLiked', 'isQueued'];
 
 export const getUserGamesByStatus = async (req, res) => {
